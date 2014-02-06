@@ -26,3 +26,8 @@ snap7_lib
 snap7_lib is required for using linCC and it's used for communicate with siemens plc. Please download, compile and install library from http://snap7.sourceforge.net/.
 
 In the future, snap7 should not longer be required, it will be integrate into linCC.
+
+License
+=======
+
+linCC is released under GPLv3 license.
