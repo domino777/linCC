@@ -3,6 +3,8 @@
 
 #include <mysql.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 // DATABASE CONNECTION DATA
 
@@ -23,7 +25,7 @@
  * if successfully connected function return 0, else 1 value is returned
  * 
  */
-int linCCConnection( MYSQL* mySqlHndl );
+MYSQL* linCCConnect( );
 
 /*
  * void linCCDisconnect( MYSQL* mySqlHndl )
@@ -49,6 +51,6 @@ void linCCDisconnect( MYSQL* mySqlHndl );
  * row count is returned
  * 
  */
-void linCCRowCount( MYSQL* mySqlHndl, char* tableName, long unsigned int* strLen );
+long linCCRowCount( MYSQL* mySqlHndl, char* tableName );
 
 #endif //dbAccess_h

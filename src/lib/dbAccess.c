@@ -1,13 +1,24 @@
 #include "dbAccess.h"
 
-int linCCConnection( MYSQL* mySqlHndl ) {
+MYSQL* linCCConnect() {
 
-//  Connecting to mariaDB database
+//  mySQL handler creation
+	MYSQL*  mySqlHndl;
+	mySqlHndl = mysql_init( NULL );
 
-    if ( mysql_real_connect( mySqlHndl, dbUrl, dbUser, dbPwd, dbBase,  0, NULL, 0 ) == NULL )
-		return 1;
+//  Check if handler was successfully created
+	if ( mySqlHndl == NULL ) {
+		printf( "%s", "Unable to create mySQL handler\n" );
+		exit(1);
+	}
+	
+//  Try to connec to mariaDB database
+    if ( mysql_real_connect( mySqlHndl, dbUrl, dbUser, dbPwd, dbBase,  0, NULL, 0 ) == NULL ) {
+		printf( "%s", "Unable to establish connection to mySQL server" );
+		exit(2);
+	}
 		
-	return 0;
+	return mySqlHndl;
 }
 
 void linCCDisconnect( MYSQL* mySqlHndl ){
@@ -15,25 +26,31 @@ void linCCDisconnect( MYSQL* mySqlHndl ){
 }
 
 
-void linCCRowCount( MYSQL* mySqlHndl, char* tableName, long unsigned int* strLen ){
-	
+long linCCRowCount( MYSQL* mySqlHndl, char* tableName ){
+
+//  SQL query for return table row count
 	char qryStr[256] = "SELECT COUNT(*) FROM ";
-	
-	for ( long unsigned int i = 0; i < *strLen; i++ )
-		qryStr[ 21 + i ] = *( tableName + i );
-		
-	*strLen += 21;
-	qryStr[ (int)(*strLen) + 1] = 0;
+
+//  Concatenating string
+	strcat( qryStr, tableName );
 		
 	const char* qryStrConst = qryStr;
-	
+
+//  Send SQL query to Databases	
 	mysql_query( mySqlHndl, qryStrConst );
-	
+
+//  Using resource
 	MYSQL_RES *mySqlRes;
 	mySqlRes = mysql_use_result( mySqlHndl );
 	
+//  Getting row
 	MYSQL_ROW mySqlRow;
 	mySqlRow = mysql_fetch_row( mySqlRes );
+
+//	Convert row char* field into long value
+	const char* rowField = mySqlRow[0];
+	long retVal = strtol( rowField, NULL, 10 );
+	mysql_free_result( mySqlRes );
 	
-    //return (unsigned long) mysql_num_rows(MYSQL_RES * );
+	return retVal;
 }

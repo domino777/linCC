@@ -30,14 +30,9 @@ int main(void) {
     //~ printf ( "%d\n", BList.FBCount );
 
     MYSQL* sqlHdl;    
-    printf ( "%d\n", sqlHdl = mysql_init( NULL ));
-    printf ( "%d\n", linCCConnection( sqlHdl ));
-    
-    printf ( "%d\n", mysql_query( sqlHdl, "SELECT * FROM varList" ) );
-	mysql_store_result( sqlHdl );
-    
-        long unsigned int count = 7;
-     linCCRowCount( sqlHdl, "varList",  &count );
+    printf( "%d\n", sqlHdl = linCCConnect( ));
+    printf( "%d\n", linCCRowCount( sqlHdl, "varList" ));
+    printf( "%d\n", linCCRowCount( sqlHdl, "PLCConnections" ));
     
     //printf ( "%d\n", mysql_field_count( sqlHdl ));
     
