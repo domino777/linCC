@@ -34,8 +34,17 @@ int main(void) {
     printf ( "%d\n", linCCConnection( sqlHdl ));
     
     printf ( "%d\n", mysql_query( sqlHdl, "SELECT * FROM varList" ) );
+	mysql_store_result( sqlHdl );
     
-    printf ( "%d\n", mysql_field_count( sqlHdl ));
+        long unsigned int count = 7;
+     linCCRowCount( sqlHdl, "varList",  &count );
+    
+    //printf ( "%d\n", mysql_field_count( sqlHdl ));
+    
+
+
+    
+   
     //~ MYSQL_RES* sqlRes;
     //~ sqlRes = mysql_use_result( sqlHdl );
 

@@ -41,14 +41,14 @@ void linCCDisconnect( MYSQL* mySqlHndl );
 /*
  * linCCRowCount( MYSQL* mySqlHndl, char* tableName )
  * 
- * Disconnect from a SQL server
+ * Return the row count from a given table
  * 
  * ex:
- * linCCDisconnect( database_handler );
+ * unsigned long linCCRowCount( database_handler, table_name );
  * 
- * no value returned
+ * row count is returned
  * 
  */
-int linCCRowCount( MYSQL* mySqlHndl, char* tableName );
+void linCCRowCount( MYSQL* mySqlHndl, char* tableName, long unsigned int* strLen );
 
 #endif //dbAccess_h
