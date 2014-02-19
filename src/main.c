@@ -1,12 +1,12 @@
 #include "snap7.h"
-#include "lib/rConf.h"
+#include "lib/dbAccess.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <mysql.h>
 
 byte MyDB32[256]; // byte is a portable type of snap7.h
 S7Object Client;
-lCConnData plcConnData;
+//lCConnData plcConnData;
 
 int main(void) {
 	
@@ -29,10 +29,9 @@ int main(void) {
     //~ Cli_ListBlocks(Client, &BList);
     //~ printf ( "%d\n", BList.FBCount );
 
-    MYSQL* sqlHdl;
-    
+    MYSQL* sqlHdl;    
     printf ( "%d\n", sqlHdl = mysql_init( NULL ));
-    printf ( "%d\n", mysql_real_connect( sqlHdl, "localhost", "root", "linCC", "linCC",  0, NULL, 0 ));
+    printf ( "%d\n", linCCConnection( sqlHdl ));
     
     printf ( "%d\n", mysql_query( sqlHdl, "SELECT * FROM varList" ) );
     
