@@ -8,14 +8,14 @@ MYSQL* linCCConnect() {
 
 //  Check if handler was successfully created
 	if ( mySqlHndl == NULL ) {
-		printf( "%s", "Unable to create mySQL handler\n" );
-		exit(1);
+		printf( "%s", "\nUnable to create mySQL handler\n" );
+		exit( MYSQL_INIT_ERROR );
 	}
 	
 //  Try to connec to mariaDB database
     if ( mysql_real_connect( mySqlHndl, dbUrl, dbUser, dbPwd, dbBase,  0, NULL, 0 ) == NULL ) {
-		printf( "%s", "Unable to establish connection to mySQL server" );
-		exit(2);
+		printf( "%s", "\nUnable to establish connection to mySQL server\n" );
+		exit( MYSQL_CONN_ERROR );
 	}
 		
 	return mySqlHndl;
@@ -53,4 +53,28 @@ long linCCRowCount( MYSQL* mySqlHndl, char* tableName ){
 	mysql_free_result( mySqlRes );
 	
 	return retVal;
+}
+
+DATA_ROWS linCCgetRows( MYSQL* mySqlHndl, const char* sqlQry ){
+
+//  SQL query
+    if ( mysql_query( mySqlHndl, sqlQry ) ){
+        printf ( "%s", "\nSQL query error in linCCgetRow\n" );
+        exit( MYSQL_QURY_ERROR );
+    }	
+    
+    MYSQL_RES* mySqlRes;
+    mySqlRes = mysql_store_result( mySqlHndl );  
+	
+//  Getting row
+    MYSQL_ROW mySqlRow;	
+    DATA_ROWS sqlRow;
+    for( int i = 0; ( mySqlRow = mysql_fetch_row( mySqlRes )) != NULL; i++)
+		sqlRow[i] = mySqlRow;
+			
+    if ( !mySqlRow )
+        mysql_free_result( mySqlRes );
+		
+	return sqlRow;
+		
 }

@@ -7,6 +7,7 @@
 byte MyDB32[256]; // byte is a portable type of snap7.h
 S7Object Client;
 //lCConnData plcConnData;
+volatile DATA_ROWS tagsList;
 
 int main(void) {
 	
@@ -33,7 +34,10 @@ int main(void) {
     printf( "%d\n", sqlHdl = linCCConnect( ));
     printf( "%d\n", linCCRowCount( sqlHdl, "varList" ));
     printf( "%d\n", linCCRowCount( sqlHdl, "PLCConnections" ));
-    
+    int retVal = linCCRowCount( sqlHdl, "varList" );
+
+    tagsList = linCCgetRows( sqlHdl, "SELECT id, tagName FROM varList" );
+
     //printf ( "%d\n", mysql_field_count( sqlHdl ));
     
 

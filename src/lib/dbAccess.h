@@ -13,6 +13,12 @@
 #define dbPwd    "linCC"
 #define dbBase   "linCC"
 
+// EXIT ERROR DEFINITION
+#define MYSQL_INIT_ERROR       1
+#define MYSQL_CONN_ERROR       2
+#define MYSQL_QURY_ERROR       3
+
+typedef MYSQL_ROW *DATA_ROWS;
 
 /*
  * int linCCConnection( MYSQL* mySqlHndl )
@@ -52,5 +58,18 @@ void linCCDisconnect( MYSQL* mySqlHndl );
  * 
  */
 long linCCRowCount( MYSQL* mySqlHndl, char* tableName );
+
+/*
+ * linCCgetRows( MYSQL* mySqlHndl, char* tableName )
+ * 
+ * Return the rows from a "SELECT cols_name FROM table_name ..." SQL query
+ * 
+ * ex:
+ * DATA_ROWS var = linCCRowCount( database_handler, select_query );
+ * 
+ * rows are returnd
+ * 
+ */
+DATA_ROWS linCCgetRows( MYSQL* mySqlHndl, const char* sqlQry );
 
 #endif //dbAccess_h
