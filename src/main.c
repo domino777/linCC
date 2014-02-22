@@ -1,5 +1,5 @@
 #include "snap7.h"
-#include "lib/dbAccess.h"
+#include "lib/db_varTag.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <mysql.h>
@@ -7,7 +7,7 @@
 byte MyDB32[256]; // byte is a portable type of snap7.h
 S7Object Client;
 //lCConnData plcConnData;
-volatile DATA_ROWS tagsList;
+volatile TAG_VAR* tags;
 
 int main(void) {
 	
@@ -30,16 +30,10 @@ int main(void) {
     //~ Cli_ListBlocks(Client, &BList);
     //~ printf ( "%d\n", BList.FBCount );
 
-    MYSQL* sqlHdl;    
-    printf( "%d\n", sqlHdl = linCCConnect( ));
-    printf( "%d\n", linCCRowCount( sqlHdl, "varList" ));
-    printf( "%d\n", linCCRowCount( sqlHdl, "PLCConnections" ));
-    int retVal = linCCRowCount( sqlHdl, "varList" );
+    loadTags();
 
-    tagsList = linCCgetRows( sqlHdl, "SELECT id, tagName FROM varList" );
 
-    //printf ( "%d\n", mysql_field_count( sqlHdl ));
-    
+
 
 
     
