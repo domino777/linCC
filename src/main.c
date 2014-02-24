@@ -32,9 +32,6 @@ int main(void) {
     loadTags();
 
 
-
-
-
     
    
     //~ MYSQL_RES* sqlRes;

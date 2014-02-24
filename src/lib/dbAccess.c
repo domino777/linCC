@@ -55,7 +55,7 @@ long linCCRowCount( MYSQL* mySqlHndl, char* tableName ){
 	return retVal;
 }
 
-int linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS* sqlRows, const char* sqlQry ){
+DATA_ROWS* linCCgetRows( MYSQL* mySqlHndl, const char* sqlQry ){
 
 //  SQL query
     if ( mysql_query( mySqlHndl, sqlQry ) ){
@@ -68,7 +68,7 @@ int linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS* sqlRows, const char* sqlQry ){
 	
 //  Getting row
     MYSQL_ROW mySqlRow;	
-
+    DATA_ROWS* sqlRows;
     sqlRows = NULL;
     
     unsigned long LByte;
@@ -76,12 +76,12 @@ int linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS* sqlRows, const char* sqlQry ){
     for( int i = 0; ( mySqlRow = mysql_fetch_row( mySqlRes )) != NULL; i++){
         LByte = LByte + sizeof( **mySqlRow );
         sqlRows = realloc( sqlRows, LByte );
-        sqlRows[i] = mySqlRow;
+        sqlRows[i] = (void *)mySqlRow;
 	}
 			
     if ( !mySqlRow )
         mysql_free_result( mySqlRes );
 		
-	//return sqlRow;
+    return sqlRows;
 		
 }

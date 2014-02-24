@@ -70,6 +70,6 @@ long linCCRowCount( MYSQL* mySqlHndl, char* tableName );
  * rows are returnd
  * 
  */
-int linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS* sqlRows, const char* sqlQry );
+DATA_ROWS* linCCgetRows( MYSQL* mySqlHndl, const char* sqlQry );
 
 #endif //dbAccess_h

@@ -3,6 +3,7 @@
 
 #include "dbAccess.h"
 
+#define DBVARTAG_MALLOC_ERROR       4
 #define MYSQL_DB_VARTAG_QRY "SELECT id, tagType, tagDB, tagBYTE, tagBIT FROM varList"
 
 typedef struct{
@@ -15,6 +16,6 @@ typedef struct{
 
 extern volatile TAG_VAR* tags;
 
-int loadTags(  );
+int loadTags();
 
 #endif // db_varTag_h
