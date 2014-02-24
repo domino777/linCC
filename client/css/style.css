@@ -1,0 +1,38 @@
+#table td.editable:not(.warning):hover {
+    /* bootstrap color from info class */
+    background-color: #d9edf7;
+}
+#table > tbody > tr:hover {
+    /* bootstrap color from table-hover class */
+    background-color: #f5f5f5;
+}
+#table td.row_deleter {
+    text-align: center;
+    font-weight: bolder;
+}
+#table td.row_deleter:hover {
+    text-decoration: underline;
+    /* bootstrap color from danger class */
+    background-color: #f2dede;
+}
+#table td.row_adder {
+    text-align: center;
+    font-weight: bolder;
+}
+#table td.row_adder:hover {
+    text-decoration: underline;
+    /* bootstrap color from danger class */
+    background-color: #dff0d8;
+}
+
+#table input {
+    background-color: transparent;
+    padding: 0;
+    border: 0;
+    margin: 0;
+    position: absolute;
+}
+#table input:focus {
+    outline: 0;
+    outline-offset: 0;
+}
