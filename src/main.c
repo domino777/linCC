@@ -1,11 +1,10 @@
-#include "snap7.h"
 #include "lib/db_varTag.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <mysql.h>
 
-byte MyDB32[256]; // byte is a portable type of snap7.h
-S7Object Client;
+//byte MyDB32[256]; // byte is a portable type of snap7.h
+//S7Object Client;
 //lCConnData plcConnData;
 volatile TAG_VAR* tags;
 
