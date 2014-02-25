@@ -17,6 +17,7 @@
 #define MYSQL_INIT_ERROR       1
 #define MYSQL_CONN_ERROR       2
 #define MYSQL_QURY_ERROR       3
+#define ALLOC_ERROR            4
 
 typedef MYSQL_ROW *DATA_ROWS;
 

@@ -59,7 +59,7 @@ DATA_ROWS* linCCgetRows( MYSQL* mySqlHndl, const char* sqlQry ){
 
 //  SQL query
     if ( mysql_query( mySqlHndl, sqlQry ) ){
-        printf ( "%s", "\nSQL query error in linCCgetRow\n" );
+        printf ( "%s", "SQL query error in linCCgetRow\n" );
         exit( MYSQL_QURY_ERROR );
     }	
     
@@ -72,15 +72,23 @@ DATA_ROWS* linCCgetRows( MYSQL* mySqlHndl, const char* sqlQry ){
     sqlRows = NULL;
     
     unsigned long LByte;
+    int i = 0;
     
-    for( int i = 0; ( mySqlRow = mysql_fetch_row( mySqlRes )) != NULL; i++){
+    for( i = 0; ( mySqlRow = mysql_fetch_row( mySqlRes )) != NULL; i++){
         LByte = LByte + sizeof( **mySqlRow );
         sqlRows = realloc( sqlRows, LByte );
+        if( !sqlRows ) {
+			printf( "Unable to allocate space. realloc() error in linCCgetRow()\n" );
+			exit( ALLOC_ERROR );
+		}
         sqlRows[i] = (void *)mySqlRow;
 	}
-			
+		
     if ( !mySqlRow )
         mysql_free_result( mySqlRes );
+    
+    if ( i == 0 )
+		return NULL;
 		
     return sqlRows;
 		
