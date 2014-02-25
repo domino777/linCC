@@ -1,11 +1,8 @@
 #include "lib/db_varTag.h"
+#include "lib/libPLC.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <mysql.h>
 
-//byte MyDB32[256]; // byte is a portable type of snap7.h
-//S7Object Client;
-//lCConnData plcConnData;
 volatile TAG_VAR* tags;
 
 int main(void) {
@@ -28,9 +25,13 @@ int main(void) {
     //~ TS7BlocksList BList;
     //~ Cli_ListBlocks(Client, &BList);
     //~ printf ( "%d\n", BList.FBCount );
-
-    loadTags();
-
+S7Object *client;
+int* rack;
+int* slot;
+*rack = 0;
+*slot = 2;
+    printf("%d\n", PLCConnect( client, "192.168.201.1", rack , slot ));
+printf("%d", PLCDisconnect( client ));
 
     
    
