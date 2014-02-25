@@ -1,5 +1,5 @@
-#ifndef libPLC_h
-#define libPLC_h
+#ifndef _libPLC_h
+#define _libPLC_h
 
 #include "snap7.h"
 

@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-volatile TAG_VAR* tags;
+volatile TAG_VAR* VarTags;
 
 int main(void) {
 	
@@ -25,13 +25,13 @@ int main(void) {
     //~ TS7BlocksList BList;
     //~ Cli_ListBlocks(Client, &BList);
     //~ printf ( "%d\n", BList.FBCount );
-S7Object *client;
+//S7Object *client;
 int* rack;
 int* slot;
 *rack = 0;
 *slot = 2;
-    printf("%d\n", PLCConnect( client, "192.168.201.1", rack , slot ));
-printf("%d", PLCDisconnect( client ));
+ //   printf("%d\n", PLCConnect( client, "192.168.201.1", rack , slot ));
+//printf("%d", PLCDisconnect( client ));
 
     
    

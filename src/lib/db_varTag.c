@@ -12,8 +12,8 @@ int loadTags(  ){
         return LINCC_NO_TAGS_FOUND;
     
 //  ------> tags <------- is extern TAG_VAR*    
-    tags = malloc( sizeof( TAG_VAR ) * rowCount );
-    if( !tags ) {
+    VarTags = malloc( sizeof( TAG_VAR ) * rowCount );
+    if( !VarTags ) {
 		printf( "Unable to allocate space for 'tags' by malloc in loadTags()\n" );
 		exit( DBVARTAG_MALLOC_ERROR );
 	}
@@ -28,19 +28,19 @@ int loadTags(  ){
     printf ( "%d\n", rowCount);
     for( unsigned long i = 0; i < rowCount; i++ ){
 //	Convert id char* field into unsigned int value
-        tags[i].id = ( unsigned int )strtol(( const char *)tagsList[i][0], NULL, 10 );
+        VarTags[i].id = ( unsigned int )strtol(( const char *)tagsList[i][0], NULL, 10 );
         
 //	Convert type char* field into unsigned int value
-       tags[i].type = ( unsigned char )strtol(( const char *)tagsList[i][1], NULL, 10 );
+       VarTags[i].type = ( unsigned char )strtol(( const char *)tagsList[i][1], NULL, 10 );
         
 //	Convert db char* field into unsigned int value
-        tags[i].db = ( unsigned int )strtol(( const char *)tagsList[i][2], NULL, 10 );
+        VarTags[i].db = ( unsigned int )strtol(( const char *)tagsList[i][2], NULL, 10 );
 
 //	Convert byte address char* field into unsigned long value        
-        tags[i].address = ( unsigned long )strtol(( const char *)tagsList[i][3], NULL, 10 );
+        VarTags[i].address = ( unsigned long )strtol(( const char *)tagsList[i][3], NULL, 10 );
 		
 //	Convert bit of byte address char* field into unsigned int value
-        tags[i].addressBit = ( unsigned char )strtol(( const char *)tagsList[i][4], NULL, 10 );
+        VarTags[i].addressBit = ( unsigned char )strtol(( const char *)tagsList[i][4], NULL, 10 );
     }	
 	
 	free( tagsList ); 

@@ -1,5 +1,5 @@
-#ifndef dbAccess_h
-#define dbAccess_h
+#ifndef _dbAccess_h
+#define _dbAccess_h
 
 #include <mysql.h>
 #include <stdio.h>

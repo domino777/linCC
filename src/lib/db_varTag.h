@@ -1,5 +1,5 @@
-#ifndef db_varTag_h
-#define db_varTag_h
+#ifndef _db_varTag_h
+#define _db_varTag_h
 
 #include "dbAccess.h"
 
@@ -19,7 +19,7 @@ typedef struct{
 	unsigned char addressBit;
 } TAG_VAR;
 
-extern volatile TAG_VAR* tags;
+extern volatile TAG_VAR* VarTags;
 
 int loadTags();
 
