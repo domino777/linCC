@@ -7,10 +7,9 @@ require('./config.php');
 class linCC_mysqli extends mysqli {
     public function __construct() {
 
-        global $db_host, $db_port, $db_user, $db_passwd, $db_name, $db_table;
+        global $db_host, $db_port, $db_user, $db_passwd, $db_name;
 
-        if (!isset($db_host, $db_port, $db_user, $db_passwd, $db_name,
-                   $db_table)) {
+        if (!isset($db_host, $db_port, $db_user, $db_passwd, $db_name)) {
             die("<p>Connection error: check values in file config.php</p>");
         }
 
@@ -19,7 +18,6 @@ class linCC_mysqli extends mysqli {
         $this->db_user   = $db_user;
         $this->db_passwd = $db_passwd;
         $this->db_name   = $db_name;
-        $this->db_table  = $db_table;
 
         parent::__construct($db_host . ":" . $db_port,
                             $db_user,
@@ -33,19 +31,12 @@ class linCC_mysqli extends mysqli {
     }
 
 
-    /* optional: pass table name */
-    public function get_field_names() {
+    /* return an array filled withe the field names of the table $tname */
+    public function get_field_names($tname) {
 
         $fields = array();
 
-        if (func_num_args() == 1) {
-            $table_name = func_get_arg(0);
-        }
-        else { // default value
-            $table_name = $this->db_table;
-        }
-
-        $sql_query = "SHOW COLUMNS FROM " . $table_name;
+        $sql_query = "SHOW COLUMNS FROM " . $tname;
         if ($result = $this->query($sql_query)) {
             while ($column = $result->fetch_array()) {
                 array_push($fields, $column['Field']);
@@ -61,16 +52,12 @@ class linCC_mysqli extends mysqli {
     }
 
 
-    /* TODO warning: può ritornare un ordine casuale? */
-    public function get_values() {
+    /* return the content (as assoc array) of the given table $tname */
+    public function get_values($tname) {
 
         $fields = array();
 
-        // TODO: ci saranno piu tabelle
-        $table_name = func_num_args() == 1 ? func_get_arg(0) :
-                                             $this->db_table;
-
-        $sql_query = "SELECT * FROM " . $table_name;
+        $sql_query = "SELECT * FROM " . $tname;
         if ($result = $this->query($sql_query)) {
             // TODO: fecth assoc o altro?
             while ($row = $result->fetch_assoc()) {
@@ -86,6 +73,8 @@ class linCC_mysqli extends mysqli {
         return $fields;
     }
 
+    /* funzione chiamata da ajax.php
+     */
     public function table_update($table, $field, $value, $id) {
         // TODO la chiave primaria deve essere definita altrove (mettichè non si chiama id)
         $sql_query = "UPDATE " . $table . " SET " . $field . "=" . $value . " WHERE id=" . $id;
@@ -93,15 +82,29 @@ class linCC_mysqli extends mysqli {
         // TODO che me ne faccio del result?
         //$result->close();
     }
+
+    /* called by form.php
+     */
+    public function load($table, $data) {
+        $sql_query = "INSERT INTO " . $table . " VALUES ";
+        foreach ($data as $row) {
+            $sql_query .= "( " . implode(", ", $row) . " )";
+            if ($row !== end($data)) {
+                $sql_query .= ",";
+            }
+        }
+        echo $sql_query;
+        $this->query($sql_query) or die("impossibile eseguire la query");
+    }
 }
 
 
 /* riempie e ritorna una stringa che descrive il tag thead (e il suo contenuto)
  * della tabella */
-function table_header() {
+function table_header($tname) {
 
     $link = new linCC_mysqli();
-    $field_names = $link->get_field_names();
+    $field_names = $link->get_field_names($tname);
     $link->close();
 
     $theader = "<thead>" . PHP_EOL;
@@ -116,10 +119,10 @@ function table_header() {
 
 /* riempie e ritorna una stringa che descrive il tag tbody (e il suo contenuto)
  * della tabella */
-function table_body() {
+function table_body($tname) {
 
     $link = new linCC_mysqli();
-    $rows = $link->get_values(); // TODO passargli un ordine?
+    $rows = $link->get_values($tname);
     $link->close();
 
     $tbody = "<tbody>" . PHP_EOL;
@@ -143,6 +146,24 @@ function table_body() {
     $tbody .= "</tbody>" . PHP_EOL;
 
     return $tbody;
+}
+
+/* Return an array filled with the names of the tables to display
+ */
+function getTableNames() {
+    // TODO: $table_names ora è definito in functions.php, ma sarebbe bello
+    // poterlo ottenerlo dal server sql
+    global $table_names;
+    return $table_names;
+}
+
+/* Print the table
+ */
+function getTable($table_name) { ?>
+    <table class="table table-condensed table-bordered" id="table">
+        <?php echo table_header($table_name); ?>
+        <?php echo table_body($table_name); ?>
+    </table><?php
 }
 
 ?>

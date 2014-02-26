@@ -22,6 +22,10 @@ if (isset($_POST['action'])) {
                 $link->close();
                 break;
 
+            case 'get_table':
+                getTable($_POST['table']);
+                break;
+
             default:
                 die("azione non definita");
                 break;
