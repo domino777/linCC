@@ -1,5 +1,5 @@
 /*
- *	libPLC.h
+ *	commInfo.h
  *
  *  "Copyright 2014 Mauro Ghedin"
  *
@@ -24,26 +24,24 @@
  *
  */
 
-#ifndef _libPLC_h
-#define _libPLC_h
+#ifndef _commInfo_h
+#define _commInfo_h
 
-#include "snap7.h"
 #include <stdio.h>
+#include <string.h>
+#include "dbAccess.h"
 
-#define snap7PLCIp           192.168.102.1
-#define snap7PLCRack         0
-#define snap7PLCSlot         2
+#define commTable        "PLCConnections"
 
-#define _BYTE_2_             2
-#define _BYTE_4_             4
+typedef struct{
+    unsigned int id;
+    unsigned int rack;
+    unsigned int slot;
+    unsigned int port;
+    char ip[16];	
+} PLC_CONN_INFO;
 
-#define PLC_DB_READ_ERROR    0xFFFFFFFF
 
-enum variableType { noType, Bool, Byte, Word, Int, DInt, Real };
+PLC_CONN_INFO* linCCPLCgetInfo();
 
-
-int PLCConnect( S7Object* plcClient, const char* plcIp, int* plcRack, int* plcSlot );
-int PLCDisconnect( S7Object* plcClient );
-float PLCReadTag( S7Object* plcClient, unsigned int* tagDB, unsigned long* tagByte, unsigned char* varType );
-
-#endif // _libPLC_h
+#endif // _commInfo_h

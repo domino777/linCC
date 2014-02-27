@@ -50,7 +50,7 @@ int loadTags( unsigned long* rowCount ){
         return LINCC_NO_TAGS_FOUND;
     
     const char* rowField;
-    printf ( "%d\n", *rowCount);
+    
     for( unsigned long i = 0; i < *rowCount; i++ ){
 //	Convert id char* field into unsigned int value
         VarTags[i].id = ( unsigned int )strtol(( const char *)tagsList[i][0], NULL, 10 );
@@ -67,7 +67,7 @@ int loadTags( unsigned long* rowCount ){
 //	Convert bit of byte address char* field into unsigned int value
         VarTags[i].addressBit = ( unsigned char )strtol(( const char *)tagsList[i][4], NULL, 10 );
     }	
-	
+
 	free( tagsList ); 
     linCCDisconnect( sqlHndl );
     

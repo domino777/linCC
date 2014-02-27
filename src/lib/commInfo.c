@@ -1,5 +1,5 @@
 /*
- *	libPLC.h
+ *	commInfo.h
  *
  *  "Copyright 2014 Mauro Ghedin"
  *
@@ -24,26 +24,30 @@
  *
  */
 
-#ifndef _libPLC_h
-#define _libPLC_h
+#include "commInfo.h"
 
-#include "snap7.h"
-#include <stdio.h>
+PLC_CONN_INFO* linCCPLCgetInfo( ) {
+	
+    MYSQL* sqlHndl;  
+	
+//  Create my SQL connection and get row count of vatList table
+    sqlHndl = linCCConnect( );
+    
+    DATA_ROWS* connList;
+    connList = linCCgetRows( sqlHndl, "SELECT id, PLCRack, PLCSlot, PLCIp FROM PLCConnections" );
+    if ( !connList )
+        exit( 5 );
+    
+    PLC_CONN_INFO* plcInfo = malloc( sizeof( PLC_CONN_INFO ));
+    
+//  Convert id char* field into unsigned int value
+    plcInfo->id   = ( unsigned int )strtol(( const char *)connList[0][0], NULL, 10 );
+    plcInfo->rack = ( unsigned int )strtol(( const char *)connList[0][1], NULL, 10 );
+    plcInfo->slot = ( unsigned int )strtol(( const char *)connList[0][2], NULL, 10 );
+    strcpy( plcInfo->ip, ( const char *)connList[0][3] );
 
-#define snap7PLCIp           192.168.102.1
-#define snap7PLCRack         0
-#define snap7PLCSlot         2
-
-#define _BYTE_2_             2
-#define _BYTE_4_             4
-
-#define PLC_DB_READ_ERROR    0xFFFFFFFF
-
-enum variableType { noType, Bool, Byte, Word, Int, DInt, Real };
-
-
-int PLCConnect( S7Object* plcClient, const char* plcIp, int* plcRack, int* plcSlot );
-int PLCDisconnect( S7Object* plcClient );
-float PLCReadTag( S7Object* plcClient, unsigned int* tagDB, unsigned long* tagByte, unsigned char* varType );
-
-#endif // _libPLC_h
+    free( connList ); 
+    linCCDisconnect( sqlHndl );
+    
+    return plcInfo;
+}

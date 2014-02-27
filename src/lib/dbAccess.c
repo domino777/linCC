@@ -101,7 +101,8 @@ DATA_ROWS* linCCgetRows( MYSQL* mySqlHndl, const char* sqlQry ){
     int i = 0;
     
     for( i = 0; ( mySqlRow = mysql_fetch_row( mySqlRes )) != NULL; i++){
-        LByte = LByte + sizeof( **mySqlRow );
+        //LByte = LByte + sizeof( **mySqlRow );
+        LByte = LByte + strlen( ( const char *)mySqlRow ) + 1;
         sqlRows = realloc( sqlRows, LByte );
         if( !sqlRows ) {
 			printf( "Unable to allocate space. realloc() error in linCCgetRow()\n" );
