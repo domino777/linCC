@@ -26,19 +26,18 @@
  
 #include "db_varTag.h"
 
-int loadTags(  ){
+int loadTags( unsigned long* rowCount ){
 	
 	MYSQL* sqlHndl;  
-	unsigned long rowCount = 0;
 	
 //  Create my SQL connection and get row count of vatList table
     sqlHndl = linCCConnect( );
-    rowCount = linCCRowCount( sqlHndl, "varList" );
-    if( rowCount == 0)
+    *rowCount = linCCRowCount( sqlHndl, "varList" );
+    if( *rowCount == 0)
         return LINCC_NO_TAGS_FOUND;
     
 //  ------> tags <------- is extern TAG_VAR*    
-    VarTags = malloc( sizeof( TAG_VAR ) * rowCount );
+    VarTags = malloc( sizeof( TAG_VAR ) * *rowCount );
     if( !VarTags ) {
 		printf( "Unable to allocate space for 'tags' by malloc in loadTags()\n" );
 		exit( DBVARTAG_MALLOC_ERROR );
@@ -51,8 +50,8 @@ int loadTags(  ){
         return LINCC_NO_TAGS_FOUND;
     
     const char* rowField;
-    printf ( "%d\n", rowCount);
-    for( unsigned long i = 0; i < rowCount; i++ ){
+    printf ( "%d\n", *rowCount);
+    for( unsigned long i = 0; i < *rowCount; i++ ){
 //	Convert id char* field into unsigned int value
         VarTags[i].id = ( unsigned int )strtol(( const char *)tagsList[i][0], NULL, 10 );
         

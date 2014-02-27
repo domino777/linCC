@@ -26,17 +26,17 @@
  
 #include "libPLC.h"
 
-int PLCConnect( S7Object* plcClient, const char* plcIp, int plcRack, int plcSlot ){
+int PLCConnect( S7Object* plcClient, const char* plcIp, int* plcRack, int* plcSlot ){
     
     *plcClient = Cli_Create();
-    return Cli_ConnectTo( *plcClient, plcIp, plcRack,  plcSlot );
+    return Cli_ConnectTo( *plcClient, plcIp, *plcRack, *plcSlot );
 }
 
 int PLCDisconnect( S7Object* plcClient ){
     return Cli_Disconnect( *plcClient );
 }
 
-float PLCReadTag( S7Object* plcClient, unsigned int* tagDB, unsigned int* tagByte, int* varType ){
+float PLCReadTag( S7Object* plcClient, unsigned int* tagDB, unsigned long* tagByte, unsigned char* varType ){
 
 //  Getting plc's INT or WORD value
     if( *varType == Word || *varType == Int ) {
@@ -49,6 +49,21 @@ float PLCReadTag( S7Object* plcClient, unsigned int* tagDB, unsigned int* tagByt
          int tempVar = dataByte[0] << 8;
          return ( float )( tempVar = tempVar | dataByte[1] );
     }
-    //else if( varType == DInt || varType == Real )
+    
+    else if( *varType == Real ) {
+         char dataByte[ _BYTE_4_ ];
+		 
+//  Read error detection
+         if( Cli_DBRead( *plcClient, *tagDB, *tagByte, _BYTE_4_ , &dataByte ))
+             return PLC_DB_READ_ERROR;
+             
+         float tempFloat;
+         *((unsigned char*)(&tempFloat) + 3) = dataByte[0];
+         *((unsigned char*)(&tempFloat) + 2) = dataByte[1];
+         *((unsigned char*)(&tempFloat) + 1) = dataByte[2];
+         *((unsigned char*)(&tempFloat) + 0) = dataByte[3];
+
+         return tempFloat;
+    }
 }
 

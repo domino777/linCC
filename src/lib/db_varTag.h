@@ -29,13 +29,12 @@
 
 #include "dbAccess.h"
 
-#define DBVARTAG_MALLOC_ERROR       20
-#define MYSQL_DB_VARTAG_QRY "SELECT id, tagType, tagDB, tagBYTE, tagBIT FROM varList"
-
-
 // RETURN CODE DEFINITION
 #define LINCC_RETURN_OK             0
 #define LINCC_NO_TAGS_FOUND         1
+#define DBVARTAG_MALLOC_ERROR       20
+
+#define MYSQL_DB_VARTAG_QRY "SELECT id, tagType, tagDB, tagBYTE, tagBIT FROM varList"
 
 typedef struct{
 	unsigned int id;
@@ -45,8 +44,8 @@ typedef struct{
 	unsigned char addressBit;
 } TAG_VAR;
 
-extern volatile TAG_VAR* VarTags;
+extern TAG_VAR* VarTags;
 
-int loadTags();
+int loadTags( unsigned long* rowCount );
 
 #endif // db_varTag_h
