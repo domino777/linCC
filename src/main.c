@@ -26,13 +26,13 @@ int main(void) {
     //~ TS7BlocksList BList;
     //~ Cli_ListBlocks(Client, &BList);
     //~ printf ( "%d\n", BList.FBCount );
-S7Object* client;
+//S7Object* client;
 
 int rack = 0;
 int slot = 2;
 
-  printf("-->%d\n", PLCConnect( client, "192.168.1.83", 0 , 3 ));
- printf("%d", PLCDisconnect( client ));
+  //printf("-->%d\n", PLCConnect( client, "192.168.1.83", 0 , 3 ));
+ //printf("%d", PLCDisconnect( client ));
 
   //  client = Cli_Create();
   //  printf("%d\n", Cli_ConnectTo( client, "192.168.1.83", 0, 3 ));
