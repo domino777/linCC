@@ -8,4 +8,7 @@ $db_passwd = "linCC";
 $db_name   = "linCC";
 $db_table  = "varList";
 
+// TODO queste informazioni dovrebbero stare su un database
+$table_names = [ "varList", "PLCConnections" ];
+
 ?>
