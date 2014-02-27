@@ -27,14 +27,22 @@
 #ifndef _libPLC_h
 #define _libPLC_h
 
+#include <stdio.h>
 #include "snap7.h"
 
-#define snap7PLCIp       192.168.102.1
-#define snap7PLCRack     0
-#define snap7PLCSlot     2
+#define snap7PLCIp           192.168.102.1
+#define snap7PLCRack         0
+#define snap7PLCSlot         2
 
+#define _BYTE_2_             2
+#define _BYTE_4_             4
+
+#define PLC_DB_READ_ERROR    0xFFFFFFFF
+
+enum variableType { Bool, Word, Int, DInt, Real };
 
 int PLCConnect( S7Object* plcClient, const char* plcIp, int plcRack, int plcSlot );
 int PLCDisconnect( S7Object* plcClient );
+float PLCReadTag( S7Object* plcClient, unsigned int* tagDB, unsigned int* tagByte, int* varType );
 
 #endif // _libPLC_h
