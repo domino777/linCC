@@ -8,7 +8,7 @@
 #define snap7PLCSlot     2
 
 
-int PLCConnect( S7Object* plcClient, const char* plcIp, int* plcRack, int* plcSlot );
+int PLCConnect( S7Object* plcClient, const char* plcIp, int plcRack, int plcSlot );
 int PLCDisconnect( S7Object* plcClient );
 
-#endif // libPLC_h
+#endif // _libPLC_h
