@@ -99,4 +99,6 @@ long linCCRowCount( MYSQL* mySqlHndl, char* tableName );
  */
 DATA_ROWS* linCCgetRows( MYSQL* mySqlHndl, const char* sqlQry );
 
+int linCCWriteRow( MYSQL* mySqlHndl, const char* sqlQry );
+
 #endif //dbAccess_h

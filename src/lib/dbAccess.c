@@ -116,6 +116,10 @@ DATA_ROWS* linCCgetRows( MYSQL* mySqlHndl, const char* sqlQry ){
     if ( i == 0 )
 		return NULL;
 		
-    return sqlRows;
-		
+    return sqlRows;	
+}
+
+int linCCWriteRow( MYSQL* mySqlHndl, const char* sqlQry ){
+//  SQL query
+    return mysql_query( mySqlHndl, sqlQry );	
 }

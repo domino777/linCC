@@ -73,3 +73,15 @@ int loadTags( unsigned long* rowCount ){
     
     return LINCC_RETURN_OK;
 }
+
+int writeTag( unsigned int* tagId, float* tagValue ){
+	MYSQL* sqlHndl;  
+	
+//  Create my SQL connection and get row count of vatList table
+    sqlHndl = linCCConnect( );
+	char sqlQry[256];
+	sprintf( sqlQry, "UPDATE varList SET rValue=%f WHERE id=%d", *tagValue, *tagId );
+//	printf("%s", sqlQry);
+	linCCWriteRow( sqlHndl, ( const char *)sqlQry );
+    linCCDisconnect( sqlHndl );
+}
