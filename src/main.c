@@ -10,18 +10,18 @@ TAG_VAR* VarTags;
 
 int main(void) {
 
-    unsigned long* rowCount = malloc( sizeof( unsigned long ));
+    unsigned long rowCount;// = malloc( sizeof( unsigned long ));
     
     printf( "Reading database of tags... " );
-    if( loadTags( rowCount ) ) {
+    if( loadTags( &rowCount ) ) {
         printf( "Impossibile leggere lista tag da DB" );
         exit(1);
     }
     
-    printf( "DONE!!\nNumber of tags: %d\n", *rowCount );
+    printf( "DONE!!\nNumber of tags: %d\n", rowCount );
     
     printf( "Reading database of PLC connections... " );
-   	PLC_CONN_INFO* plcInfo = malloc( sizeof( PLC_CONN_INFO ));
+   	PLC_CONN_INFO* plcInfo;
    	plcInfo = linCCPLCgetInfo();	
    	
    	printf( "DONE!!\nPLC Connection info:\n" );
@@ -30,11 +30,9 @@ int main(void) {
    	printf( "PLC SLOT         : %d\n", plcInfo->slot );
    	printf( "Try to connect to PLC... " );
    	
-   	S7Object* client = malloc( sizeof( S7Object ));
-	if( PLCConnect( client, plcInfo->ip , &plcInfo->rack, &plcInfo->slot )) {
+   	S7Object client;
+	if( PLCConnect( &client, plcInfo->ip , &plcInfo->rack, &plcInfo->slot )) {
 		free( plcInfo );
-		free( client );
-		free( rowCount );
 		exit(50);
 	}
 	free( plcInfo );
@@ -46,18 +44,17 @@ int main(void) {
         sleep( 1 );
         for(int i = 0; i < 10; i++ ){
 			float retVal;
-			retVal = PLCReadTag( client, &VarTags[i].db, &VarTags[i].address, &VarTags[i].type );
+			retVal = PLCReadTag( &client, &VarTags[i].db, &VarTags[i].address, &VarTags[i].type );
             printf("DATA no[%d] value: %f\n", counter, retVal);
             writeTag( &VarTags[i].id, &retVal );
          }
         printf("\n");
     }
     
-    printf("PLCDisc status: %d\n", PLCDisconnect( client ));
+    printf("PLCDisc status: %d\n", PLCDisconnect( &client ));
     
 
-    free( client );
-    free( rowCount );
+
 }
 
  
