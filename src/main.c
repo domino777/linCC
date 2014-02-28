@@ -19,7 +19,7 @@ int main(void) {
     }
     
     printf( "DONE!!\nNumber of tags: %d\n", rowCount );
-    
+   
     printf( "Reading database of PLC connections... " );
    	PLC_CONN_INFO* plcInfo;
    	plcInfo = linCCPLCgetInfo();	
@@ -40,7 +40,7 @@ int main(void) {
 	printf( "DONE!!\nComunication started...\n" );
 	sleep( 5 );
     int counter = 0;
-    while( ( ++counter ) < 50 ){
+    while( ( ++counter ) < 5000 ){
         sleep( 1 );
         for(int i = 0; i < 10; i++ ){
 			float retVal;

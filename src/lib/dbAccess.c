@@ -26,25 +26,22 @@
 
 #include "dbAccess.h"
 
-MYSQL* linCCConnect() {
+ int linCCConnect( MYSQL** mySqlHndl ) {
 
 //  mySQL handler creation
-	MYSQL*  mySqlHndl;
-	mySqlHndl = mysql_init( NULL );
+	*mySqlHndl = mysql_init( NULL );
 
-//  Check if handler was successfully created
-	if ( mySqlHndl == NULL ) {
+//  Pointer error, service MUST TO BE CLOSE!!!!!!!
+	if ( *mySqlHndl == NULL ) {
 		printf( "%s", "\nUnable to create mySQL handler\n" );
 		exit( MYSQL_INIT_ERROR );
 	}
 	
 //  Try to connec to mariaDB database
-    if ( mysql_real_connect( mySqlHndl, dbUrl, dbUser, dbPwd, dbBase,  0, NULL, 0 ) == NULL ) {
-		printf( "%s", "\nUnable to establish connection to mySQL server\n" );
-		exit( MYSQL_CONN_ERROR );
-	}
+    if ( !mysql_real_connect( *mySqlHndl, dbUrl, dbUser, dbPwd, dbBase,  0, NULL, 0 ))
+		return MYSQL_CONN_ERROR ;
 		
-	return mySqlHndl;
+	return 0;
 }
 
 void linCCDisconnect( MYSQL* mySqlHndl ){
@@ -81,43 +78,49 @@ long linCCRowCount( MYSQL* mySqlHndl, char* tableName ){
 	return retVal;
 }
 
-DATA_ROWS* linCCgetRows( MYSQL* mySqlHndl, const char* sqlQry ){
+int linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS** sqlRows, const char* sqlQry ){
 
 //  SQL query
-    if ( mysql_query( mySqlHndl, sqlQry ) ){
-        printf ( "%s", "SQL query error in linCCgetRow\n" );
-        exit( MYSQL_QURY_ERROR );
-    }	
+    if ( mysql_query( mySqlHndl, sqlQry ) )
+        return MYSQL_QURY_ERROR;
     
     MYSQL_RES* mySqlRes;
+    
     mySqlRes = mysql_store_result( mySqlHndl );  
+    if( !mySqlRes )
+        return MYSQL_STORE_ERROR;
 	
 //  Getting row
     MYSQL_ROW mySqlRow;	
-    DATA_ROWS* sqlRows;
-    sqlRows = NULL;
+    
+//  Declare a local temp data rows
+    DATA_ROWS* tempRows;
+    tempRows = NULL;
     
     unsigned long LByte;
     int i = 0;
     
     for( i = 0; ( mySqlRow = mysql_fetch_row( mySqlRes )) != NULL; i++){
-        //LByte = LByte + sizeof( **mySqlRow );
+//      Getting string length for re-allocate spece
         LByte = LByte + strlen( ( const char *)mySqlRow ) + 1;
-        sqlRows = realloc( sqlRows, LByte );
-        if( !sqlRows ) {
+        tempRows = realloc( tempRows, LByte );
+        
+//      Pointer error, service MUST TO BE CLOSE!!!!!!!
+        if( !tempRows ) {
 			printf( "Unable to allocate space. realloc() error in linCCgetRow()\n" );
 			exit( ALLOC_ERROR );
 		}
-        sqlRows[i] = (void *)mySqlRow;
+        tempRows[i] = (void *)mySqlRow;
 	}
+	
+    *sqlRows = tempRows;
 		
-    if ( !mySqlRow )
-        mysql_free_result( mySqlRes );
+    mysql_free_result( mySqlRes );
     
     if ( i == 0 )
-		return NULL;
+		return MYSQL_NO_ROW;
 		
-    return sqlRows;	
+    return 0;
 }
 
 int linCCWriteRow( MYSQL* mySqlHndl, const char* sqlQry ){

@@ -29,6 +29,7 @@
 
 #include "snap7.h"
 #include <stdio.h>
+#include "errors.h"
 
 #define snap7PLCIp           192.168.102.1
 #define snap7PLCRack         0

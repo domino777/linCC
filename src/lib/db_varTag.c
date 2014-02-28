@@ -29,9 +29,9 @@
 int loadTags( unsigned long* rowCount ){
 	
 	MYSQL* sqlHndl;  
-	
+
 //  Create my SQL connection and get row count of vatList table
-    sqlHndl = linCCConnect( );
+    linCCConnect( &sqlHndl );
     *rowCount = linCCRowCount( sqlHndl, "varList" );
     if( *rowCount == 0)
         return LINCC_NO_TAGS_FOUND;
@@ -45,9 +45,11 @@ int loadTags( unsigned long* rowCount ){
     
 //  Retrive tag list from databese
     DATA_ROWS* tagsList;
-    tagsList = linCCgetRows( sqlHndl, MYSQL_DB_VARTAG_QRY );
-    if ( !tagsList )
-        return LINCC_NO_TAGS_FOUND;
+    
+    linCCgetRows( sqlHndl, &tagsList, MYSQL_DB_VARTAG_QRY );
+    int retVal;
+    if ( retVal = linCCgetRows( sqlHndl, &tagsList, MYSQL_DB_VARTAG_QRY ))
+        return retVal;
     
     const char* rowField;
     
@@ -71,14 +73,15 @@ int loadTags( unsigned long* rowCount ){
 	free( tagsList ); 
     linCCDisconnect( sqlHndl );
     
-    return LINCC_RETURN_OK;
+    return 0;
 }
 
 int writeTag( unsigned int* tagId, float* tagValue ){
+	
 	MYSQL* sqlHndl;  
 	
 //  Create my SQL connection and get row count of vatList table
-    sqlHndl = linCCConnect( );
+    linCCConnect( &sqlHndl );
 	char sqlQry[256];
 	sprintf( sqlQry, "UPDATE varList SET rValue=%f WHERE id=%d", *tagValue, *tagId );
 //	printf("%s", sqlQry);

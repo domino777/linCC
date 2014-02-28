@@ -31,6 +31,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "errors.h"
 
 // DATABASE CONNECTION DATA
 
@@ -40,12 +41,6 @@
 #define dbUser   "linCC"
 #define dbPwd    "linCC"
 #define dbBase   "linCC"
-
-// EXIT ERROR DEFINITION
-#define MYSQL_INIT_ERROR       1
-#define MYSQL_CONN_ERROR       2
-#define MYSQL_QURY_ERROR       3
-#define ALLOC_ERROR            4
 
 typedef MYSQL_ROW *DATA_ROWS;
 
@@ -60,7 +55,7 @@ typedef MYSQL_ROW *DATA_ROWS;
  * if successfully connected function return 0, else 1 value is returned
  * 
  */
-MYSQL* linCCConnect( );
+int linCCConnect( MYSQL** mySqlHndl );
 
 /*
  * void linCCDisconnect( MYSQL* mySqlHndl )
@@ -99,7 +94,7 @@ long linCCRowCount( MYSQL* mySqlHndl, char* tableName );
  * rows are returnd
  * 
  */
-DATA_ROWS* linCCgetRows( MYSQL* mySqlHndl, const char* sqlQry );
+int linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS** sqlRows, const char* sqlQry );
 
 int linCCWriteRow( MYSQL* mySqlHndl, const char* sqlQry );
 

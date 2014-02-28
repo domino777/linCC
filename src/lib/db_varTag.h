@@ -28,11 +28,7 @@
 #define _db_varTag_h
 
 #include "dbAccess.h"
-
-// RETURN CODE DEFINITION
-#define LINCC_RETURN_OK             0
-#define LINCC_NO_TAGS_FOUND         1
-#define DBVARTAG_MALLOC_ERROR       20
+#include "errors.h"
 
 #define MYSQL_DB_VARTAG_QRY "SELECT id, tagType, tagDB, tagBYTE, tagBIT FROM varList"
 

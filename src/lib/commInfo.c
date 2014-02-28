@@ -31,10 +31,10 @@ PLC_CONN_INFO* linCCPLCgetInfo( ) {
     MYSQL* sqlHndl;  
 	
 //  Create my SQL connection and get row count of vatList table
-    sqlHndl = linCCConnect( );
+     linCCConnect( &sqlHndl );
     
     DATA_ROWS* connList;
-    connList = linCCgetRows( sqlHndl, "SELECT id, PLCRack, PLCSlot, PLCIp FROM PLCConnections" );
+     linCCgetRows( sqlHndl, &connList, "SELECT id, PLCRack, PLCSlot, PLCIp FROM PLCConnections" );
     if ( !connList )
         exit( 5 );
     
