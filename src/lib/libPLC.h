@@ -35,6 +35,7 @@
 #define snap7PLCRack         0
 #define snap7PLCSlot         2
 
+#define _BYTE_1_             1
 #define _BYTE_2_             2
 #define _BYTE_4_             4
 
@@ -45,6 +46,6 @@ enum variableType { noType, Bool, Byte, Word, Int, DInt, Real };
 
 int PLCConnect( S7Object* plcClient, const char* plcIp, int* plcRack, int* plcSlot );
 int PLCDisconnect( S7Object* plcClient );
-float PLCReadTag( S7Object* plcClient, unsigned int* tagDB, unsigned long* tagByte, unsigned char* varType );
+float PLCReadTag( S7Object* plcClient, unsigned int* tagDB, unsigned long* tagByte, unsigned char* tagBit, unsigned char* varType );
 
 #endif // _libPLC_h

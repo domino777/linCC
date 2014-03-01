@@ -38,16 +38,22 @@ int main(void) {
 	free( plcInfo );
 	
 	printf( "DONE!!\nComunication started...\n" );
-	sleep( 5 );
+	
+	sleep( 2 );
     int counter = 0;
     while( ( ++counter ) < 5000 ){
         sleep( 1 );
+        float retVal[10];
+        int ids[10];
         for(int i = 0; i < 10; i++ ){
-			float retVal;
-			retVal = PLCReadTag( &client, &VarTags[i].db, &VarTags[i].address, &VarTags[i].type );
-            printf("DATA no[%d] value: %f\n", counter, retVal);
-            writeTag( &VarTags[i].id, &retVal );
+			printf(" TAG ID: %d -- TYPE: %d -- ", VarTags[i].id, VarTags[i].type );
+			ids[i] = VarTags[i].id; 
+			retVal[i] = PLCReadTag( &client, &VarTags[i].db, &VarTags[i].address, &VarTags[i].addressBit, &VarTags[i].type );
+            printf("DATA no[%d] value: %f\n", counter, retVal[i]);
          }
+         int count = 10;
+         writeTag( ids, retVal, &count );
+         
         printf("\n");
     }
     
