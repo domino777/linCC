@@ -35,9 +35,9 @@
 
 // DATABASE CONNECTION DATA
 
-#define dbUrl    "domyno.servehttp.com"
+//#define dbUrl    "domyno.servehttp.com"
 //#define dbUrl    "localhost"
-//#define dbUrl    "192.168.1.110"
+#define dbUrl    "192.168.1.110"
 #define dbUser   "linCC"
 #define dbPwd    "linCC"
 #define dbBase   "linCC"

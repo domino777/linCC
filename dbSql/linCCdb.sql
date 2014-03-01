@@ -1,6 +1,6 @@
--- MySQL dump 10.14  Distrib 5.5.36-MariaDB, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.14  Distrib 5.5.35-MariaDB, for Linux (x86_64)
 --
--- Host: domyno.servehttp.com    Database: linCC
+-- Host: localhost    Database: linCC
 -- ------------------------------------------------------
 -- Server version	5.5.35-MariaDB-log
 
@@ -24,11 +24,11 @@ DROP TABLE IF EXISTS `PLCConnections`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `PLCConnections` (
   `id` tinyint(4) NOT NULL AUTO_INCREMENT,
-  `PLCType` tinyint(4) DEFAULT NULL,
+  `PLCType` tinyint(4) NOT NULL,
   `PLCRack` tinyint(4) NOT NULL,
   `PLCSlot` tinyint(4) NOT NULL,
   `PLCIp` varchar(100) NOT NULL,
-  `PLCConPort` smallint(6) DEFAULT NULL,
+  `PLCConPort` smallint(6) NOT NULL,
   `PLCDesc` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
@@ -44,18 +44,25 @@ DROP TABLE IF EXISTS `varList`;
 CREATE TABLE `varList` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tagName` varchar(50) DEFAULT NULL,
-  `tagType` tinyint(4) DEFAULT NULL,
-  `tagPLCNo` tinyint(4) DEFAULT NULL,
-  `tagDB` smallint(6) DEFAULT NULL,
-  `tagBYTE` mediumint(9) DEFAULT NULL,
-  `tagBIT` tinyint(4) DEFAULT NULL,
+  `tagType` tinyint(4) NOT NULL,
+  `tagPLCNo` tinyint(4) NOT NULL,
+  `tagDB` smallint(6) NOT NULL,
+  `tagBYTE` mediumint(9) NOT NULL,
+  `tagBIT` tinyint(4) NOT NULL,
   `rValue` double DEFAULT NULL,
   `wValue` double DEFAULT NULL,
   `wFlag` tinyint(4) DEFAULT NULL,
   `tagComment` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8
+/*!50100 PARTITION BY RANGE (id)
+(PARTITION idp0 VALUES LESS THAN (200) ENGINE = InnoDB,
+ PARTITION idp1 VALUES LESS THAN (400) ENGINE = InnoDB,
+ PARTITION idp2 VALUES LESS THAN (600) ENGINE = InnoDB,
+ PARTITION idp3 VALUES LESS THAN (800) ENGINE = InnoDB,
+ PARTITION idp4 VALUES LESS THAN (1000) ENGINE = InnoDB,
+ PARTITION idp5 VALUES LESS THAN MAXVALUE ENGINE = InnoDB) */;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -67,4 +74,4 @@ CREATE TABLE `varList` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-02-28  9:08:15
+-- Dump completed on 2014-03-01 11:55:02
