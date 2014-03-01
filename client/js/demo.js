@@ -16,16 +16,34 @@ var table_func = {
         if ($(this).hasClass("warning"))
             // already in use
             return;
+
+        // if another cell is in insert mode revert it to a normal table cell
+        table_func.normalize_td();
+
         var curVal = $(this).text();
         var curWidth = $(this).width();
         var inputTag = $("<input type=\"text\"/>");
         inputTag.on('keydown', table_func.td_done);
         $(this).addClass("warning")
                .empty()
-               .append(inputTag);
+               .append(inputTag)
+               .data('orig_value', curVal);
         inputTag.val(curVal)
                 .width(curWidth)
                 .select();
+    },
+
+    /* revert all table cell currently in insert mode (with an input child) to
+     * simple cells */
+    normalize_td: function(){
+        $(this.table).find('input').each(function(){
+            var orig_value = $(this).parent().data('orig_value');
+            var val = $(this).val();
+            $(this).parent()
+                .removeClass('warning')
+                .empty()
+                .html(orig_value ? orig_value : val);
+        });
     },
 
     /* transform the input element back to a td*/
@@ -108,6 +126,7 @@ var menu = {
             }
         }).done(function(data){
             table_parent.html(data).hide().fadeIn('fast');
+            table_func.init();
         });
 
     }
