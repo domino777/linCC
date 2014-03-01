@@ -43,6 +43,6 @@ typedef struct{
 extern TAG_VAR* VarTags;
 
 int loadTags( unsigned long* rowCount );
-int writeTag( unsigned int* tagId, float* tagValue );
+int writeTag( unsigned int* tagId, float* tagValue, unsigned int* tagsCount );
 
 #endif // db_varTag_h

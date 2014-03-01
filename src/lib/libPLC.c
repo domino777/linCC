@@ -36,7 +36,7 @@ int PLCDisconnect( S7Object* plcClient ){
     return Cli_Disconnect( *plcClient );
 }
 
-float PLCReadTag( S7Object* plcClient, unsigned int* tagDB, unsigned long* tagByte, unsigned char* varType ){
+float PLCReadTag( S7Object* plcClient, unsigned int* tagDB, unsigned long* tagByte, unsigned char* tagBit, unsigned char* varType ){
 
 //  Getting plc's INT or WORD value
     if( *varType == Word || *varType == Int ) {
@@ -65,5 +65,18 @@ float PLCReadTag( S7Object* plcClient, unsigned int* tagDB, unsigned long* tagBy
 
          return tempFloat;
     }
+    
+    else if( *varType == Bool ) {
+		char dataByte;
+		
+		//  Read error detection
+         if( Cli_DBRead( *plcClient, *tagDB, *tagByte, _BYTE_1_ , &dataByte ))
+             return PLC_DB_READ_ERROR;
+             
+         if ( dataByte & ( 0x0001 << *tagBit ) )
+             return 1.0;
+             
+         return 0.0;
+     }
 }
 
