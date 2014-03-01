@@ -26,6 +26,16 @@ if (isset($_POST['action'])) {
                 getTable($_POST['table']);
                 break;
 
+            case 'get':
+                $link = new linCC_mysqli();
+                // TODO sanitize here
+                $values = $link->get(
+                    $_POST['table'],
+                    $_POST['field']) or die("something went wrong con la query");
+                $link->close();
+                echo json_encode($values);
+                break;
+
             default:
                 die("azione non definita");
                 break;

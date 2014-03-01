@@ -51,6 +51,32 @@ class linCC_mysqli extends mysqli {
         return $fields;
     }
 
+    /* 
+        TODO fix here,
+        get parameter with func_args
+     */
+    public function get($table, $col) {
+
+        $values = array();
+
+        // TODO id deve essere gestito correttamente
+        $sql_query = "SELECT id," . $col . " FROM " . $table;
+        if ($result = $this->query($sql_query)) {
+            // TODO: fecth assoc o altro?
+            while ($entry = $result->fetch_assoc()) {
+                array_push($values, $entry);
+            }
+            /* free result set */
+            $result->close();
+        }
+        else {
+            die("Error: failure on query: " . $sql_query);
+        }
+
+        return $values;
+
+    }
+
 
     /* return the content (as assoc array) of the given table $tname */
     public function get_values($tname) {
@@ -132,14 +158,12 @@ function table_body($tname) {
             if (!isset($val)) {
                 $val = "-";
             }
+            $tbody .= "<td";
             // TODO sto id deve essere definito altrove
-            if ($key === "id") {
-                $tbody .= "<td class=\"immutable\">";
+            if ($key !== "id") {
+                $tbody .= " class=\"editable\"";
             }
-            else {
-                $tbody .= "<td class=\"editable\">";
-            }
-            $tbody .= $val . "</td>" . PHP_EOL;
+            $tbody .= ">" . $val . "</td>" . PHP_EOL;
         }
         $tbody .= "</tr>";
     }

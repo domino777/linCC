@@ -9,6 +9,8 @@ var table_func = {
         this.table = table_selector;
         $(this.table).on('click', 'td.editable', this.td_insert);
         this.addMetaCells();
+        this.add_metadata();
+        this.sync_table();
     },
 
     /* transform the cell into an input element */
@@ -93,7 +95,62 @@ var table_func = {
         row_adder.append($("<td style=\"visibility:hidden;\"></td>"))
                  .append($("<td colspan=\"" + colspan + "\" class=\"row_adder\"></td>").text("aggiungi"));
         $(this.table).find("tbody").append(row_adder);
-    }
+    },
+
+    /* updates the column rValue every 1 second
+     * TODO: something to fix here, like the vars (they should stay in another place)
+     */
+     sync_table: function(){
+        var delay = 1; // seconds
+        var col_sync_name = 'rValue';
+        var table  = 'varList';
+        var fn_update = function(){
+            // do the ajax request
+            $.ajax({
+                type: "POST",
+                url: "ajax.php",
+                dataType: 'json',
+                data: {
+                    action: "get",
+                    table : table,
+                    field : col_sync_name
+                }
+            }).done(function(data){
+                console.log("ajax done for column " + col_sync_name);
+                // do some stuff here
+                $(table_func.table).find('tbody').children().each(function(row_idx,row){
+                    // TODO this info should come with html5 data
+                    var row_id = $(row).children().first().text();
+                    $(row).children().each(function(idx,td){
+                        if ($(td).data('col') === col_sync_name) {
+                            $(td).text(data[row_idx].rValue);
+                        };
+                    });
+                });
+            });
+        };
+        window.setInterval(fn_update, 1000);
+        // fn_update();
+
+     },
+
+     /* add html5 data values to the table cells */
+     add_metadata: function(){
+        // get a map composed of pairs of  <column position>: <column name>
+        var theader_data = {};
+        $(this.table).find('th').each(function(){
+            var pos = $(this).parent().children().index($(this));
+            var name = $(this).text();
+            theader_data[pos] = name;
+        });
+
+        // add metadata to the entire table
+        $(this.table).find('tbody tr').each(function(row_idx, row){
+            $(row).children('td').each(function(idx, el){
+                $(el).data("col", theader_data[idx]);
+            });
+        });
+     },
 };
 
 /* give functionality to the table menu in the top bar */
