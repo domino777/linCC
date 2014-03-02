@@ -2,7 +2,7 @@
 
 require('./functions.php');
 
-$table_names = getTableNames();
+$table_names = get_table_names();
 $def_table = $table_names[0];
 
 ?><!DOCTYPE html>
@@ -21,7 +21,7 @@ $def_table = $table_names[0];
 </head>
 
 <body>
-<noscript>Attenzione, javascript deve essere abilitato per il funzionamento di LinCC</noscript>
+<noscript>Warning, you need to enable javascript</noscript>
 
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -55,10 +55,10 @@ $def_table = $table_names[0];
   </div><!-- /.container-fluid -->
 </nav>
 
-<div class="container">
+<div class="container" id="content">
 
   <div class="row">
-    <?php getTable($def_table); ?>
+    <?php get_table($def_table); ?>
   </div>
 
   <div class="row">
@@ -109,11 +109,11 @@ $def_table = $table_names[0];
 
   <!-- Highcharts JS
   ================================================== -->
-  <script src="./lib/highcharts/js/highcharts.js"></script>
+  <!--script src="./lib/highcharts/js/highcharts.js"></script-->
 
-  <!-- demo JS
+  <!-- client script JS
   ================================================== -->
-  <script src="./js/demo.js"></script>
+  <script src="./js/script.js"></script>
 </div>
 </body>
 </html>

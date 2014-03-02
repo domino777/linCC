@@ -2,27 +2,20 @@
 
 require('./config.php');
 
-/* classe specifica per l'oggetto msqli utilizzato da linCC
+/**
+ * Class used for creating objects representing the connection to the database
+ * used by linCC. It also give some helpful methods.
  */
 class linCC_mysqli extends mysqli {
     public function __construct() {
 
-        global $db_host, $db_port, $db_user, $db_passwd, $db_name;
-
-        if (!isset($db_host, $db_port, $db_user, $db_passwd, $db_name)) {
-            die("<p>Connection error: check values in file config.php</p>");
-        }
-
-        $this->db_host   = $db_host;
-        $this->db_port   = $db_port;
-        $this->db_user   = $db_user;
-        $this->db_passwd = $db_passwd;
-        $this->db_name   = $db_name;
-
-        parent::__construct($db_host . ":" . $db_port,
-                            $db_user,
-                            $db_passwd,
-                            $db_name);
+        parent::__construct(
+            $host = DB_HOST,
+            $username = DB_USER,
+            $passwd = DB_PASS,
+            $dbname = DB_NAME,
+            $port = DB_PORT);
+        // (constants defined in config.php)
 
         if (mysqli_connect_error()) {
             die('Connect Error (' . mysqli_connect_errno() . ') ' .
@@ -31,18 +24,28 @@ class linCC_mysqli extends mysqli {
     }
 
 
-    /* return an array filled withe the field names of the table $tname */
-    public function get_field_names($tname) {
+    /**
+     * Get the fields of a specific table.
+     *
+     * Perform a 'SHOW COLUMNS FROM <tname>' query for retrieving the
+     * columns name of the given table $tname.
+     *
+     * @param $tname: string representing the name of the table on which take
+     *                the field names
+     *
+     * @return an array composed of the field names of the given table $tname
+     */
+    public function get_fields($tname) {
 
         $fields = array();
 
         $sql_query = "SHOW COLUMNS FROM " . $tname;
         if ($result = $this->query($sql_query)) {
-            while ($column = $result->fetch_array()) {
+            while ($column = $result->fetch_assoc()) {
                 array_push($fields, $column['Field']);
             }
-            /* free result set */
-            $result->close();
+            // free result set
+            $result->free();
         }
         else {
             die("Error: failure on query: " . $sql_query);
@@ -51,23 +54,32 @@ class linCC_mysqli extends mysqli {
         return $fields;
     }
 
-    /* 
-        TODO fix here,
-        get parameter with func_args
-     */
-    public function get($table, $col) {
 
+    /**
+     * Get all values of a column in a specific table.
+     *
+     * Perform a 'SELECT id, <field_name> FROM <table_name>' query for
+     * retrieving pairs of id => values.
+     *
+     * @param $tname: string representing the name of the table on which take
+     *                the field names
+     *        $colname: string representing the name of the interested column
+     *                  to retreive
+     *
+     * @return an assoc array composed of many id => value elements.
+     */
+    public function get_col($tname, $colname) {
+
+        $pkn = "id"; // primary key name. TODO: this should be defined elsewhere
         $values = array();
 
-        // TODO id deve essere gestito correttamente
-        $sql_query = "SELECT id," . $col . " FROM " . $table;
+        $sql_query = "SELECT " . $pkn . "," . $colname . " FROM " . $tname;
         if ($result = $this->query($sql_query)) {
-            // TODO: fecth assoc o altro?
             while ($entry = $result->fetch_assoc()) {
-                array_push($values, $entry);
+                $values[$entry[$pkn]] = $entry[$colname];
             }
             /* free result set */
-            $result->close();
+            $result->free();
         }
         else {
             die("Error: failure on query: " . $sql_query);
@@ -78,19 +90,36 @@ class linCC_mysqli extends mysqli {
     }
 
 
-    /* return the content (as assoc array) of the given table $tname */
-    public function get_values($tname) {
+    /**
+     * Get all values of a specific table.
+     *
+     * Perform a 'SELECT * FROM <table_name>' query for retrieving the complete
+     * table.
+     *
+     * @param $tname: string representing the name of the table on which take
+     *                the field names
+     *
+     * @return an array filled with assoc arrays. The structure is better
+     *         described with the following text:
+     *         [
+     *             // first row
+     *             [ 'field1' => 'val1', 'field2' => 'val2', ... ],
+     *
+     *             // second row
+     *             [ 'field1' => 'val1', 'field2' => 'val2', ... ]
+     *         ]
+     */
+    public function get($tname) {
 
         $fields = array();
 
         $sql_query = "SELECT * FROM " . $tname;
         if ($result = $this->query($sql_query)) {
-            // TODO: fecth assoc o altro?
             while ($row = $result->fetch_assoc()) {
                 array_push($fields, $row);
             }
             /* free result set */
-            $result->close();
+            $result->free();
         }
         else {
             die("Error: failure on query: " . $sql_query);
@@ -102,11 +131,10 @@ class linCC_mysqli extends mysqli {
     /* funzione chiamata da ajax.php
      */
     public function table_update($table, $field, $value, $id) {
-        // TODO la chiave primaria deve essere definita altrove (mettichè non si chiama id)
-        $sql_query = "UPDATE " . $table . " SET " . $field . "=" . $value . " WHERE id=" . $id;
-        $result = $this->query($sql_query);
-        // TODO che me ne faccio del result?
-        //$result->close();
+        // TODO the primary key should be defined elsewhere
+        $pkname = "id";
+        $sql_query = "UPDATE " . $table . " SET " . $field . "=\"" . $value . "\" WHERE " . $pkname . "=" . $id;
+        return $this->query($sql_query);
     }
 
     /* called by form.php
@@ -130,7 +158,7 @@ class linCC_mysqli extends mysqli {
 function table_header($tname) {
 
     $link = new linCC_mysqli();
-    $field_names = $link->get_field_names($tname);
+    $field_names = $link->get_fields($tname);
     $link->close();
 
     $theader = "<thead>" . PHP_EOL;
@@ -148,7 +176,7 @@ function table_header($tname) {
 function table_body($tname) {
 
     $link = new linCC_mysqli();
-    $rows = $link->get_values($tname);
+    $rows = $link->get($tname);
     $link->close();
 
     $tbody = "<tbody>" . PHP_EOL;
@@ -174,16 +202,15 @@ function table_body($tname) {
 
 /* Return an array filled with the names of the tables to display
  */
-function getTableNames() {
-    // TODO: $table_names ora è definito in functions.php, ma sarebbe bello
-    // poterlo ottenerlo dal server sql
+function get_table_names() {
+    // TODO: read TODO in config.php
     global $table_names;
     return $table_names;
 }
 
 /* Print the table
  */
-function getTable($table_name) { ?>
+function get_table($table_name) { ?>
     <table class="table table-condensed table-bordered" id="table">
         <?php echo table_header($table_name); ?>
         <?php echo table_body($table_name); ?>

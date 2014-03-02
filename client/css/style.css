@@ -38,5 +38,6 @@
 }
 
 body { padding-top: 70px; }
+#content { display: none; }
 .table_name { font-weight: bold; }
 #menu a:hover { cursor: pointer; }

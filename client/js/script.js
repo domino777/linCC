@@ -3,29 +3,47 @@
 var table_selector = '#table';
 var menu_selector  = '#menu .dropdown-menu';
 
+
 /* give functionality to the table */
 var table_func = {
+
     init: function(){
         this.table = table_selector;
+        this.showing = $('span.table_name').first().text();
+
         $(this.table).on('click', 'td.editable', this.td_insert);
-        this.addMetaCells();
+
+        // add cells for adding and removing rows
+        this.add_meta_cells();
+
+        // add some data information to cells for better performance
         this.add_metadata();
-        this.sync_table();
+
+        // start the sync process for the tabe
+        //this.sync_table();
     },
 
-    /* transform the cell into an input element */
+
+    /* when clicked transform the cell into an input element */
     td_insert: function(){
         if ($(this).hasClass("warning"))
-            // already in use
-            return;
+            return; // already in use
 
         // if another cell is in insert mode revert it to a normal table cell
-        table_func.normalize_td();
+        $(this.table).find('input').each(function(){
+            // restore an eventual original value
+            var orig_value = $(this).parent().data('orig_value');
+            var val = $(this).val();
+            $(this).parent()
+                .removeClass('warning')
+                .empty()
+                .html(orig_value ? orig_value : val);
+        });
 
         var curVal = $(this).text();
         var curWidth = $(this).width();
         var inputTag = $("<input type=\"text\"/>");
-        inputTag.on('keydown', table_func.td_done);
+        inputTag.on('keydown', table_func.td_done); // add callback when done
         $(this).addClass("warning")
                .empty()
                .append(inputTag)
@@ -35,35 +53,25 @@ var table_func = {
                 .select();
     },
 
-    /* revert all table cell currently in insert mode (with an input child) to
-     * simple cells */
-    normalize_td: function(){
-        $(this.table).find('input').each(function(){
-            var orig_value = $(this).parent().data('orig_value');
-            var val = $(this).val();
-            $(this).parent()
-                .removeClass('warning')
-                .empty()
-                .html(orig_value ? orig_value : val);
-        });
-    },
 
-    /* transform the input element back to a td*/
+    /* Callback triggered when the user press enter.
+       Send the update to the database and transforms the input element back to
+       a td */
     td_done: function(e){
-        // TODO: se ci sono altri celle che sono in input mode, che fare?
-        // TODO: fare un sistema di undo? tipo salvando il vecchio dato con html5 data?
-        if (e.which !== 13) {
-            // not enter. do nothing
-            return;
-        }
+        if (e.which !== 13)
+            return; // not enter. do nothing
+
         var newVal = $(this).val();
         var cell = $(this).parent('td');
+
         cell.empty()
             .text(newVal)
             .removeClass("warning");
 
-        // TODO!!! dis-hardcodarlo
-        var table = "varList";
+        if (cell.data('orig_value') === newVal)
+            return; // same value. Don't send update
+
+        // TODO use table_func.add_metadata
         var val = newVal;
         var id = cell.parent('tr').children('td').first().text();
         var colIdx = cell.parent().children().index(cell);
@@ -75,7 +83,7 @@ var table_func = {
             url: "ajax.php",
             data: {
                 action: "update",
-                table : table,
+                table : this.showing,
                 field : colName,
                 val   : val,
                 id    : id
@@ -83,19 +91,21 @@ var table_func = {
         });
     },
 
+
     /* add extra cell for adding and removing rows */
-    addMetaCells: function(){
+    add_meta_cells: function(){
         var row_deleter = $("<td></td>");
-        row_deleter.text("elimina")
+        row_deleter.text("delete")
                    .addClass("row_deleter");
         $(this.table).find("tbody tr").append(row_deleter);
 
         var row_adder = $("<tr></tr>");
         var colspan = $(this.table).find("tbody tr").last().children("td.editable").size();
         row_adder.append($("<td style=\"visibility:hidden;\"></td>"))
-                 .append($("<td colspan=\"" + colspan + "\" class=\"row_adder\"></td>").text("aggiungi"));
+                 .append($("<td colspan=\"" + colspan + "\" class=\"row_adder\"></td>").text("add"));
         $(this.table).find("tbody").append(row_adder);
     },
+
 
     /* updates the column rValue every 1 second
      * TODO: something to fix here, like the vars (they should stay in another place)
@@ -117,13 +127,11 @@ var table_func = {
                 }
             }).done(function(data){
                 console.log("ajax done for column " + col_sync_name);
-                // do some stuff here
                 $(table_func.table).find('tbody').children().each(function(row_idx,row){
-                    // TODO this info should come with html5 data
-                    var row_id = $(row).children().first().text();
+                    var row_id = $(row).children().first().text(); // TODO this info should come with html5 data
                     $(row).children().each(function(idx,td){
                         if ($(td).data('col') === col_sync_name) {
-                            $(td).text(data[row_idx].rValue);
+                            $(td).text(data[row_id]);
                         };
                     });
                 });
@@ -133,6 +141,7 @@ var table_func = {
         // fn_update();
 
      },
+
 
      /* add html5 data values to the table cells */
      add_metadata: function(){
@@ -153,12 +162,15 @@ var table_func = {
      },
 };
 
+
 /* give functionality to the table menu in the top bar */
 var menu = {
     init: function(){
         this.menu = menu_selector;
         $(this.menu).on('click', 'li', this.change_table);
     },
+
+
     change_table: function(e) {
         var new_name = $(this).text();
         if ($('span.table_name').first().text() === new_name) {
@@ -190,8 +202,11 @@ var menu = {
 }
 
 $(document).ready(function(){
-    table_func.init();
+
+    $('#content').fadeIn(); // show only if js enabled
+
     menu.init();
+    table_func.init();
 });
 
 })(jQuery);

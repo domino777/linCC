@@ -5,44 +5,51 @@ require('functions.php');
 
 if (isset($_POST['action'])) {
         switch ($_POST['action']) {
+
             case 'update':
-                // TODO che da culo, walter sei ubriaco torna a casa
                 isset($_POST['table'],
                       $_POST['field'],
                       $_POST['val'],
-                      $_POST['id']) or die("richiesta malformata");
-
+                      $_POST['id']) or
+                    die("Malformed request. Check your form data");
 
                 $link = new linCC_mysqli();
-                $link->table_update(
-                    $_POST['table'],
-                    $_POST['field'],
-                    $_POST['val'],
-                    $_POST['id']) or die("something went wrong con la query");
+                $link->table_update($_POST['table'],
+                                    $_POST['field'],
+                                    $_POST['val'],
+                                    $_POST['id']) or
+                    die("Something went wrong with the query");
                 $link->close();
                 break;
 
+
             case 'get_table':
-                getTable($_POST['table']);
+                isset($_POST['table']) or
+                    die("Malformed request. Check your form data");
+                get_table($_POST['table']);
                 break;
 
             case 'get':
+                isset($_POST['table'],
+                      $_POST['field']) or
+                    die("Malformed request. Check your form data");
+
                 $link = new linCC_mysqli();
-                // TODO sanitize here
-                $values = $link->get(
+                $values = $link->get_col(
                     $_POST['table'],
-                    $_POST['field']) or die("something went wrong con la query");
+                    $_POST['field']) or die("Something went wrong with the query");
                 $link->close();
                 echo json_encode($values);
                 break;
 
+
             default:
-                die("azione non definita");
+                die("Action not defined");
                 break;
         }
 }
 else {
-    die("cosa avevi intenzione di fare?");
+    die("You must specify an action as post form data!");
 }
 
 
