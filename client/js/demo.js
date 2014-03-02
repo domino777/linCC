@@ -117,13 +117,11 @@ var table_func = {
                 }
             }).done(function(data){
                 console.log("ajax done for column " + col_sync_name);
-                // do some stuff here
                 $(table_func.table).find('tbody').children().each(function(row_idx,row){
-                    // TODO this info should come with html5 data
-                    var row_id = $(row).children().first().text();
+                    var row_id = $(row).children().first().text(); // TODO this info should come with html5 data
                     $(row).children().each(function(idx,td){
                         if ($(td).data('col') === col_sync_name) {
-                            $(td).text(data[row_idx].rValue);
+                            $(td).text(data[row_id]);
                         };
                     });
                 });
