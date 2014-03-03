@@ -49,7 +49,7 @@ void linCCDisconnect( MYSQL* mySqlHndl ){
 }
 
 
-long linCCRowCount( MYSQL* mySqlHndl, char* tableName ){
+unsigned long linCCRowCount( MYSQL* mySqlHndl, char* tableName ){
 
 //  SQL query for return table row count
 	char qryStr[256] = "SELECT COUNT(*) FROM ";
@@ -72,7 +72,7 @@ long linCCRowCount( MYSQL* mySqlHndl, char* tableName ){
 
 //	Convert row char* field into long value
 	const char* rowField = mySqlRow[0];
-	long retVal = strtol( rowField, NULL, 10 );
+	unsigned long retVal = strtol( rowField, NULL, 10 );
 	mysql_free_result( mySqlRes );
 	
 	return retVal;

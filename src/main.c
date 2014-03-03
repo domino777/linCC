@@ -1,6 +1,6 @@
-#include "lib/varTag.h"
-#include "lib/libPLC.h"
-#include "lib/commInfo.h"
+#include "varTag.h"
+#include "libPLC.h"
+#include "commInfo.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
