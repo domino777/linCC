@@ -20,7 +20,7 @@ var table_func = {
         this.add_metadata();
 
         // start the sync process for the tabe
-        //this.sync_table();
+        this.sync_table();
     },
 
 
@@ -71,11 +71,9 @@ var table_func = {
         if (cell.data('orig_value') === newVal)
             return; // same value. Don't send update
 
-        // TODO use table_func.add_metadata
         var val = newVal;
-        var id = cell.parent('tr').children('td').first().text();
-        var colIdx = cell.parent().children().index(cell);
-        var colName = cell.closest('table').find('th:nth-child(' + (1 + colIdx) + ')').text();
+        var id = cell.parent().data('id');
+        var col_name = cell.data('col');
 
         // do the ajax request
         $.ajax({
@@ -83,8 +81,8 @@ var table_func = {
             url: "ajax.php",
             data: {
                 action: "update",
-                table : this.showing,
-                field : colName,
+                table : table_func.showing,
+                field : col_name,
                 val   : val,
                 id    : id
             }
@@ -94,16 +92,58 @@ var table_func = {
 
     /* add extra cell for adding and removing rows */
     add_meta_cells: function(){
-        var row_deleter = $("<td></td>");
-        row_deleter.text("delete")
-                   .addClass("row_deleter");
-        $(this.table).find("tbody tr").append(row_deleter);
+        $(this.table).find("tbody tr").each(function(idx,el){
+            var row_deleter = $("<td></td>");
+            row_deleter.text("delete")
+                       .addClass("row_deleter");
+            row_deleter.on('click', table_func.delete_row);
+            $(el).append(row_deleter);
+        });
 
         var row_adder = $("<tr></tr>");
         var colspan = $(this.table).find("tbody tr").last().children("td.editable").size();
         row_adder.append($("<td style=\"visibility:hidden;\"></td>"))
-                 .append($("<td colspan=\"" + colspan + "\" class=\"row_adder\"></td>").text("add"));
+                 .append($("<td colspan=\"" + colspan + "\" class=\"row_adder\"></td>").text("add"))
+                 .on('click', table_func.add_row);
         $(this.table).find("tbody").append(row_adder);
+
+        // used by add row process as new row to clone
+        var empty_row = $("<tr></tr>").hide();
+        $(this.table).find('th').each(function(){
+           empty_row.append($("<td></td>"));
+        });
+        row_adder.before(empty_row);
+    },
+
+
+    /* delete a row (callback of meta cell delete) */
+    delete_row: function(){
+        var row = $(this).parent();
+        var row_id = row.data('id');
+        if (!window.confirm("Are you sure to delete row #" + row_id + "?")) return;
+        $.ajax({
+            type: "POST",
+            url: "ajax.php",
+            data: {
+                action: "remove",
+                table : table_func.showing,
+                id    : row_id
+            }
+        }).done(function(data){
+            if (data !== "Remove successful")
+                return; // something wrong
+            row.fadeOut(function(){
+                $(this).remove();
+            })
+        });
+    },
+
+
+    /* add a row (callback of meta cell add) */
+    add_row: function(){
+        console.log($(this));
+        var new_row = $(this).siblings().last().clone().show();
+        $(this).before(new_row);
     },
 
 
@@ -146,16 +186,17 @@ var table_func = {
      /* add html5 data values to the table cells */
      add_metadata: function(){
         // get a map composed of pairs of  <column position>: <column name>
-        var theader_data = {};
-        $(this.table).find('th').each(function(){
-            var pos = $(this).parent().children().index($(this));
-            var name = $(this).text();
-            theader_data[pos] = name;
+        var theader_data = [];
+        $(this.table).find('th').each(function(idx,el){
+            theader_data[idx] = $(el).text();
         });
 
-        // add metadata to the entire table
-        $(this.table).find('tbody tr').each(function(row_idx, row){
-            $(row).children('td').each(function(idx, el){
+        // Add metadata to the entire table.
+        // Each tr obtain the entry id, and each td obtain his col name
+        $(this.table).find('tbody tr').each(function(idx, row){
+            var row_id = $(row).children().first().text();
+            $(row).data('id', row_id);
+            $(row).children().each(function(idx, el){
                 $(el).data("col", theader_data[idx]);
             });
         });

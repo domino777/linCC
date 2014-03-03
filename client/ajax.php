@@ -20,6 +20,7 @@ if (isset($_POST['action'])) {
                                     $_POST['id']) or
                     die("Something went wrong with the query");
                 $link->close();
+                echo "Update successful";
                 break;
 
 
@@ -28,6 +29,7 @@ if (isset($_POST['action'])) {
                     die("Malformed request. Check your form data");
                 get_table($_POST['table']);
                 break;
+
 
             case 'get':
                 isset($_POST['table'],
@@ -40,6 +42,20 @@ if (isset($_POST['action'])) {
                     $_POST['field']) or die("Something went wrong with the query");
                 $link->close();
                 echo json_encode($values);
+                break;
+
+
+            case 'remove':
+                isset($_POST['table'],
+                      $_POST['id']) or
+                    die("Malformed request. Check your form data");
+
+                $link = new linCC_mysqli();
+                $values = $link->remove(
+                    $_POST['table'],
+                    $_POST['id']) or die("Something went wrong with the query");
+                $link->close();
+                echo "Remove successful";
                 break;
 
 

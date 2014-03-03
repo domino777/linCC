@@ -128,6 +128,17 @@ class linCC_mysqli extends mysqli {
         return $fields;
     }
 
+
+    /* remove a row in the database
+     */
+    public function remove($table, $id) {
+        // TODO the primary key should be defined elsewhere
+        $pkname = "id";
+        $sql_query = "DELETE from " . $table . " WHERE " . $pkname . "=" . $id;
+        return $this->query($sql_query);
+    }
+
+
     /* funzione chiamata da ajax.php
      */
     public function table_update($table, $field, $value, $id) {
@@ -136,6 +147,7 @@ class linCC_mysqli extends mysqli {
         $sql_query = "UPDATE " . $table . " SET " . $field . "=\"" . $value . "\" WHERE " . $pkname . "=" . $id;
         return $this->query($sql_query);
     }
+
 
     /* called by form.php
      */
