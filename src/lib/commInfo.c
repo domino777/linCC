@@ -34,7 +34,7 @@ PLC_CONN_INFO* linCCPLCgetInfo( ) {
      linCCConnect( &sqlHndl );
     unsigned long rowCount;
     DATA_ROWS* connList;
-     linCCgetRows( sqlHndl, &connList, &rowCount, "SELECT id, PLCRack, PLCSlot, PLCIp FROM PLCConnections" );
+     linCCgetRows( sqlHndl, &connList, &rowCount, 4, "SELECT id, PLCRack, PLCSlot, PLCIp FROM PLCConnections" );
     if ( !connList )
         exit( 5 );
     

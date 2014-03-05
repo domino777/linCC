@@ -18,7 +18,7 @@ int main(void) {
     for( int i = 0; i < rowCount; i++)
     printf( "DB: %d -- StrtByte: %d -- Length: %d\n", addressPacked[i].db, addressPacked[i].startByte, addressPacked[i].dataLength );
     
-   /* 
+    
     printf( "Reading database of tags... " );
     if( loadTags( &rowCount ) ) {
         printf( "Impossibile leggere lista tag da DB" );
@@ -65,7 +65,7 @@ int main(void) {
     }
     
     printf("PLCDisc status: %d\n", PLCDisconnect( &client ));
-    */
+
 
 
 }

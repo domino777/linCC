@@ -48,7 +48,7 @@ int loadTags( unsigned long* rowCount ){
     
     //linCCgetRows( sqlHndl, &tagsList, MYSQL_DB_VARTAG_QRY );
     int retVal;
-    if ( retVal = linCCgetRows( sqlHndl, &tagsList, rowCount, MYSQL_DB_VARTAG_QRY ))
+    if ( retVal = linCCgetRows( sqlHndl, &tagsList, rowCount, 5, MYSQL_DB_VARTAG_QRY ))
         return retVal;
     
     const char* rowField;

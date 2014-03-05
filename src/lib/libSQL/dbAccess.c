@@ -78,7 +78,7 @@ unsigned long linCCRowCount( MYSQL* mySqlHndl, char* tableName ){
 	return retVal;
 }
 
-int linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS** sqlRows, unsigned long* rowCount, const char* sqlQry ){
+int linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS** sqlRows, unsigned long* rowCount, unsigned int collOnQry, const char* sqlQry ){
 
 //  SQL query
     if ( mysql_query( mySqlHndl, sqlQry ) )
@@ -101,16 +101,29 @@ int linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS** sqlRows, unsigned long* rowCount
     int i = 0;
     
     for( i = 0; ( mySqlRow = mysql_fetch_row( mySqlRes )) != NULL; i++){
-//      Getting string length for re-allocate spece
-        LByte = LByte + strlen( ( const char *)mySqlRow ) + 1;
-        tempRows = realloc( tempRows, LByte );
+
+//      Reallocation of matrix array [][]
+		tempRows = realloc( tempRows, 8 * ( i + 1 ));
+        tempRows[i] = malloc( 8 * ( collOnQry ));
+        
+//      Getting string length for re-allocate space
+        for( int pi = 0; pi < collOnQry; pi++ ) {
+//          Temp allocation of string data + 1 ( null char )
+            //printf( "strlen: %d\n", strlen( mySqlRow[pi] ) + 1 ); 
+            //char* tempStr = malloc( strlen( mySqlRow[pi] ) + 1 );
+            tempRows[i][pi] = malloc( strlen( mySqlRow[pi] ) + 1 );
+            strcpy( ( char *)tempRows[i][pi], mySqlRow[pi] );
+        }
+        //printf( "SOME DATA1: %s -- DATA2: %s -- DATA3: %s\n", tempRows[i][0], tempRows[i][1], tempRows[i][2] );
+        //LByte = LByte + strlen( ( const char *)mySqlRow ) + 1;
+        //tempRows = realloc( tempRows, LByte );
         
 //      Pointer error, service MUST TO BE CLOSE!!!!!!!
-        if( !tempRows ) {
-			printf( "Unable to allocate space. realloc() error in linCCgetRow()\n" );
-			exit( ALLOC_ERROR );
-		}
-        tempRows[i] = (void *)mySqlRow;
+        //if( !tempRows ) {
+		//	printf( "Unable to allocate space. realloc() error in linCCgetRow()\n" );
+		//	exit( ALLOC_ERROR );
+		//}
+        //tempRows[i] = (void *)mySqlRow;
 	}
 	
     *sqlRows = tempRows;
@@ -121,6 +134,17 @@ int linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS** sqlRows, unsigned long* rowCount
 		return MYSQL_NO_ROW;
 		
     return 0;
+}
+
+int linCCRowsFree( DATA_ROWS* sqlRows, unsigned long* rowCount, unsigned int* collCount ){
+	
+//  Memory freeeing
+    for( int i = 0; i < *rowCount; i++ ) {
+        for( int coll = 0; coll < *collCount; coll++ )
+            free( sqlRows[i][coll] );
+        free( sqlRows[i] );
+    }   
+    free( sqlRows );
 }
 
 int linCCWriteRow( MYSQL* mySqlHndl, const char* sqlQry ){
