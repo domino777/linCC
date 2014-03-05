@@ -1,17 +1,24 @@
 #include "varTag.h"
 #include "libPLC.h"
 #include "commInfo.h"
+#include "db_tagsPack.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
 
 TAG_VAR* VarTags;
+PLCData* addressPacked;
 
 int main(void) {
 
     unsigned long rowCount;// = malloc( sizeof( unsigned long ));
+    getPack( &rowCount );
+    printf( "Data count: %d\n", rowCount );
+    for( int i = 0; i < rowCount; i++)
+    printf( "DB: %d -- StrtByte: %d -- Length: %d\n", addressPacked[i].db, addressPacked[i].startByte, addressPacked[i].dataLength );
     
+   /* 
     printf( "Reading database of tags... " );
     if( loadTags( &rowCount ) ) {
         printf( "Impossibile leggere lista tag da DB" );
@@ -58,7 +65,7 @@ int main(void) {
     }
     
     printf("PLCDisc status: %d\n", PLCDisconnect( &client ));
-    
+    */
 
 
 }

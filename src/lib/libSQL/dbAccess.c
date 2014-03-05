@@ -78,7 +78,7 @@ unsigned long linCCRowCount( MYSQL* mySqlHndl, char* tableName ){
 	return retVal;
 }
 
-int linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS** sqlRows, const char* sqlQry ){
+int linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS** sqlRows, unsigned long* rowCount, const char* sqlQry ){
 
 //  SQL query
     if ( mysql_query( mySqlHndl, sqlQry ) )
@@ -114,7 +114,7 @@ int linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS** sqlRows, const char* sqlQry ){
 	}
 	
     *sqlRows = tempRows;
-		
+	*rowCount = i;	
     mysql_free_result( mySqlRes );
     
     if ( i == 0 )

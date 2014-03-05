@@ -32,9 +32,9 @@ PLC_CONN_INFO* linCCPLCgetInfo( ) {
 	
 //  Create my SQL connection and get row count of vatList table
      linCCConnect( &sqlHndl );
-    
+    unsigned long rowCount;
     DATA_ROWS* connList;
-     linCCgetRows( sqlHndl, &connList, "SELECT id, PLCRack, PLCSlot, PLCIp FROM PLCConnections" );
+     linCCgetRows( sqlHndl, &connList, &rowCount, "SELECT id, PLCRack, PLCSlot, PLCIp FROM PLCConnections" );
     if ( !connList )
         exit( 5 );
     

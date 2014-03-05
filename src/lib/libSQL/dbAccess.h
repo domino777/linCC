@@ -83,7 +83,8 @@ void linCCDisconnect( MYSQL* mySqlHndl );
 /**************************************************************************************************************************
  * linCCRowCount( MYSQL* mySqlHndl, char* tableName )
  * 
- * Return the row count from a given table
+ * Return the row count from a given table - the value returned is the 
+ * total amount of row in a table
  * 
  * ex:
  * unsigned long linCCRowCount( database_handler, table_name );
@@ -94,23 +95,24 @@ void linCCDisconnect( MYSQL* mySqlHndl );
 unsigned long linCCRowCount( MYSQL* mySqlHndl, char* tableName );
 
 /**************************************************************************************************************************
- int linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS** sqlRows, const char* sqlQry )
+ * linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS** sqlRows, unsigned long* rowCount, const char* sqlQry )
  * 
  * Return the rows from a "SELECT cols_name FROM table_name ..." SQL query
  * 
  * ex:
- * int retVal = linCCRowCount( database_handler, sqlRows_pointer, select_query );
+ * int retVal = linCCRowCount( database_handler, sqlRows_pointer, row_count, select_query );
  * 
  * By given pointer "DATA_ROWS** sqlRows", linCCgetRows return an allocated
  * pointer by malloc which contain an 3d array divided in:
  * [ROW][COLUMN][NULL TERMINATED STRING]
+ * In row_count pointer is returned the numer of rows given by returl of the SQL query
  * 
  * function kill program with an arror code if realloc is uanble to allocate space
  * 
  * 0 returned if no issue are found
  * 
  *************************************************************************************************************************/ 
-int linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS** sqlRows, const char* sqlQry );
+int linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS** sqlRows, unsigned long* rowCount, const char* sqlQry );
 
 /**************************************************************************************************************************
  * linCCWriteRow( MYSQL* mySqlHndl, const char* sqlQry )

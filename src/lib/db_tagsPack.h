@@ -27,5 +27,16 @@
 #ifndef _db_tagsPack_h_
 #define _db_tagsPack_h_
 
+#include "dbAccess.h"
 
+typedef struct {
+    unsigned int db;
+    unsigned int startByte;
+    unsigned int dataLength;
+    unsigned char* data;
+} PLCData;
+
+extern PLCData* addressPacked;
+
+int getPack ( unsigned long* packLength );
 #endif  // _db_tagsPack_h_
