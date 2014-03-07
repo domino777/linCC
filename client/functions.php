@@ -153,13 +153,11 @@ class linCC_mysqli extends mysqli {
      */
     public function load($table, $data) {
         $sql_query = "INSERT INTO " . $table . " VALUES ";
+        $groups = array();
         foreach ($data as $row) {
-            $sql_query .= "( " . implode(", ", $row) . " )";
-            if ($row !== end($data)) {
-                $sql_query .= ",";
-            }
+            array_push($groups, "('" . implode("', '", $row) . "')");
         }
-        echo $sql_query;
+        $sql_query .= implode(", ", $groups);
         $this->query($sql_query) or die("impossibile eseguire la query");
     }
 }

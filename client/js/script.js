@@ -2,6 +2,7 @@
 
 var table_selector = '#table';
 var menu_selector  = '#menu .dropdown-menu';
+var csv_selector   = '#load_csv_link';
 
 
 /* give functionality to the table */
@@ -208,7 +209,18 @@ var table_func = {
 var menu = {
     init: function(){
         this.menu = menu_selector;
+        this.csv = csv_selector;
         $(this.menu).on('click', 'li', this.change_table);
+        $(this.csv).on('click', this.smooth_scroll_to_csv);
+    },
+
+
+    smooth_scroll_to_csv: function(e) {
+        console.log('smooth_scroll_to_csv');
+        $('html, body').animate({
+            scrollTop: $('#csv').offset().top
+        }, 'fast');
+        e.preventDefault();
     },
 
 
@@ -218,7 +230,11 @@ var menu = {
             // Do nothing
             return;
         };
+
+        // display new name
         $('span.table_name').text(new_name);
+        // change csv upload hidden input value (used by form.php)
+        $('csv').find('input[name=table_name]').val(new_name);
 
         var tmp_placeholder =
             '<p class="text-center" style="padding:20px;">' +

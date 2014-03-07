@@ -5,8 +5,13 @@ require_once('functions.php');
 $csv_name = "csv";
 // TODO: add separator char
 
-if (isset($_FILES[$csv_name]) && $_FILES[$csv_name]['error'] == 0) {
+if (isset($_FILES[$csv_name], $_POST['table_name']) &&
+    $_FILES[$csv_name]['error'] === 0) {
+
     $data = array();
+    $table_name = $_POST['table_name'];
+
+    // TODO sanity check $table_name
 
     // $name = $_FILES[$csv_name]['name'];
     // $ext = strtolower(end(explode('.', $_FILES[$csv_name]['name'])));
@@ -33,9 +38,11 @@ if (isset($_FILES[$csv_name]) && $_FILES[$csv_name]['error'] == 0) {
     // STEP 2: write data do sql server (now $data content should e sanitized)
     $link = new linCC_mysqli();
     // TODO get and process return value
-    // TODO "varList" dal input[type=hidden]
-    $link->load("varList", $data);
+    $link->load($table_name, $data);
     $link->close();
 }
+
+// return back to index.php
+header("Location:index.php");
 
 ?>
