@@ -42,6 +42,7 @@ $def_table = $table_names[0];
         <li><a>showing: <span class="table_name"><?=$def_table;?></span></a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
+        <li><a href="#" id="load_csv_link">upload csv</a></li>
         <li class="dropdown" id="menu" >
           <a class="dropdown-toggle" data-toggle="dropdown">select table <b class="caret"></b></a>
           <ul class="dropdown-menu">
@@ -61,10 +62,10 @@ $def_table = $table_names[0];
     <?php get_table($def_table); ?>
   </div>
 
-  <div class="row">
+  <div class="row" id="csv">
       <form action="form.php" method="POST" enctype="multipart/form-data">
           <!-- TODO: transform in js | input[type=hidden]@name echoato in maniera intelligente -->
-          <input type="hidden" name"<?php echo "varList"?>" />
+          <input type="hidden" name="table_name" value="<?=$def_table?>" />
           <input type="file" name="csv"/>
           <input type="submit"/>
       </form>
