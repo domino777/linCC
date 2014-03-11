@@ -33,6 +33,7 @@ int getPack ( unsigned long* packLength ) {
 //  Create my SQL connection and get row count of vatList table
     linCCConnect( &sqlHndl );
     *packLength = linCCRowCount( sqlHndl, "varList" );
+    
     if( *packLength == 0)
         return LINCC_NO_TAGS_FOUND;
     

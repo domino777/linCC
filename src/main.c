@@ -16,7 +16,7 @@ int main(void) {
     getPack( &rowCount );
     printf( "Data count: %d\n", rowCount );
     for( int i = 0; i < rowCount; i++)
-    printf( "DB: %d -- StrtByte: %d -- Length: %d\n", addressPacked[i].db, addressPacked[i].startByte, addressPacked[i].dataLength );
+        printf( "DB: %d -- StrtByte: %d -- Length: %d\n", addressPacked[i].db, addressPacked[i].startByte, addressPacked[i].dataLength );
     
     
     printf( "Reading database of tags... " );
@@ -45,7 +45,11 @@ int main(void) {
 	free( plcInfo );
 	
 	printf( "DONE!!\nComunication started...\n" );
-	
+	//unsigned int* tagDB, unsigned int* startByte, unsigned int* dataLength, unsigned char* data)
+	if( !PLCReadTags( &client, &addressPacked[2].db, &addressPacked[2].startByte, &addressPacked[2].dataLength, addressPacked[2].data ) );
+	for( int i = 0; i < addressPacked[2].dataLength; i++ )
+		printf( "DB: %d -- DATA BYTE %d -- VALUE: %d \n", addressPacked[2].db, i, addressPacked[2].data[i] );
+	/*
 	sleep( 2 );
     int counter = 0;
     while( ( ++counter ) < 5000 ){
@@ -65,7 +69,7 @@ int main(void) {
     }
     
     printf("PLCDisc status: %d\n", PLCDisconnect( &client ));
-
+*/
 
 
 }

@@ -40,6 +40,14 @@ typedef struct {
 extern PLCData* addressPacked;
 
 /**************************************************************************************************************************
+ *
+ *     For ERROR codes about exit() function or value returned by the
+ *     the functions, refer to linCC wiki or open errors.h header in: 
+ *     $linCCPATH/errors/
+ * 
+ *************************************************************************************************************************/ 
+
+/**************************************************************************************************************************
  * getPack ( unsigned long* packLength )
  * 
  * Pack the variable addresses into a PLCData structure. Into PLCData will be

@@ -80,3 +80,15 @@ float PLCReadTag( S7Object* plcClient, unsigned int* tagDB, unsigned long* tagBy
      }
 }
 
+int PLCReadTags( S7Object* plcClient, unsigned int* tagDB, unsigned int* startByte, unsigned int* dataLength, unsigned char* data) {
+
+//  Read data into PLC and read error detection
+printf("%d -- %d -- %d --\n", *tagDB, *startByte, *dataLength);
+    if( Cli_AsDBRead( *plcClient, *tagDB, *startByte, *dataLength, data ))
+        return PLC_DB_READ_ERROR;
+        
+    while( Cli_WaitAsCompletion( *plcClient, 1000));
+
+             
+    return 0;
+}

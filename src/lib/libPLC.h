@@ -47,5 +47,6 @@ enum variableType { noType, Bool, Byte, Word, Int, DInt, Real };
 int PLCConnect( S7Object* plcClient, const char* plcIp, int* plcRack, int* plcSlot );
 int PLCDisconnect( S7Object* plcClient );
 float PLCReadTag( S7Object* plcClient, unsigned int* tagDB, unsigned long* tagByte, unsigned char* tagBit, unsigned char* varType );
+int PLCReadTags( S7Object* plcClient, unsigned int* tagDB, unsigned int* startByte, unsigned int* dataLength, unsigned char* data);
 
 #endif // _libPLC_h

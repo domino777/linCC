@@ -30,7 +30,6 @@
 
 //  mySQL handler creation
 	*mySqlHndl = mysql_init( NULL );
-
 //  Pointer error, service MUST TO BE CLOSE!!!!!!!
 	if ( *mySqlHndl == NULL ) {
 		printf( "%s", "\nUnable to create mySQL handler\n" );
@@ -40,7 +39,7 @@
 //  Try to connec to mariaDB database
     if ( !mysql_real_connect( *mySqlHndl, dbUrl, dbUser, dbPwd, dbBase,  0, NULL, 0 ))
 		return MYSQL_CONN_ERROR ;
-		
+
 	return 0;
 }
 
