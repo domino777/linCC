@@ -104,26 +104,28 @@ int linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS** sqlRows, unsigned long* rowCount
 
 //      Reallocation of matrix array [][]
 		tempRows = realloc( tempRows, 8 * ( i + 1 ));
+		if( !tempRows ) {
+		    printf( "Unable to allocate space. tempRows = realloc() error in linCCgetRow()\n" );
+		    exit( 1 );
+		}
+		    
         tempRows[i] = malloc( 8 * ( collOnQry ));
+        if( !tempRows[i] ) {
+		    printf( "Unable to allocate space. tempRows[] = malloc() error in linCCgetRow()\n" );
+		    exit( 1 );
+		}
         
 //      Getting string length for re-allocate space
         for( int pi = 0; pi < collOnQry; pi++ ) {
 //          Temp allocation of string data + 1 ( null char )
-            //printf( "strlen: %d\n", strlen( mySqlRow[pi] ) + 1 ); 
-            //char* tempStr = malloc( strlen( mySqlRow[pi] ) + 1 );
             tempRows[i][pi] = malloc( strlen( mySqlRow[pi] ) + 1 );
+            if( !tempRows[i][pi] ) {
+		        printf( "Unable to allocate space. tempRows[][] = malloc() error in linCCgetRow()\n" );
+		        exit( 1 );
+		    }
+		    
             strcpy( ( char *)tempRows[i][pi], mySqlRow[pi] );
         }
-        //printf( "SOME DATA1: %s -- DATA2: %s -- DATA3: %s\n", tempRows[i][0], tempRows[i][1], tempRows[i][2] );
-        //LByte = LByte + strlen( ( const char *)mySqlRow ) + 1;
-        //tempRows = realloc( tempRows, LByte );
-        
-//      Pointer error, service MUST TO BE CLOSE!!!!!!!
-        //if( !tempRows ) {
-		//	printf( "Unable to allocate space. realloc() error in linCCgetRow()\n" );
-		//	exit( ALLOC_ERROR );
-		//}
-        //tempRows[i] = (void *)mySqlRow;
 	}
 	
     *sqlRows = tempRows;
@@ -136,9 +138,9 @@ int linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS** sqlRows, unsigned long* rowCount
     return 0;
 }
 
-int linCCRowsFree( DATA_ROWS* sqlRows, unsigned long* rowCount, unsigned int* collCount ){
+void linCCRowsFree( DATA_ROWS* sqlRows, unsigned long* rowCount, unsigned int* collCount ){
 	
-//  Memory freeeing
+//  I want to break free
     for( int i = 0; i < *rowCount; i++ ) {
         for( int coll = 0; coll < *collCount; coll++ )
             free( sqlRows[i][coll] );

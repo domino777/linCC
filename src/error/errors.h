@@ -63,4 +63,7 @@
 // loadTags EXIT ERROR
 #define DBVARTAG_MALLOC_ERROR       3
 
+
+#define GETPACK_REALLOC_EXIT        4
+
 #endif // _errors_h

@@ -28,6 +28,7 @@
 #define _db_tagsPack_h_
 
 #include "dbAccess.h"
+#include "errors.h"
 
 typedef struct {
     unsigned int db;
@@ -38,5 +39,23 @@ typedef struct {
 
 extern PLCData* addressPacked;
 
+/**************************************************************************************************************************
+ * getPack ( unsigned long* packLength )
+ * 
+ * Pack the variable addresses into a PLCData structure. Into PLCData will be
+ * stored the data read from DB's PLC
+ * 
+ * ex:
+ * int retVal = getPack ( packLength );
+ * 
+ * By given pointer "unsigned long* packLength", getPack return the bumber of
+ * package of packed address created into global PLCData
+ * 
+ * function kill program with an arror code if realloc/malloc is uanble to re-allocate/allocate space
+ * 
+ * 0 returned if no issue are found
+ * 
+ *************************************************************************************************************************/ 
 int getPack ( unsigned long* packLength );
+
 #endif  // _db_tagsPack_h_

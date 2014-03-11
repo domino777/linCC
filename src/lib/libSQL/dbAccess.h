@@ -114,7 +114,21 @@ unsigned long linCCRowCount( MYSQL* mySqlHndl, char* tableName );
  *************************************************************************************************************************/ 
 int linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS** sqlRows, unsigned long* rowCount, unsigned int collOnQry, const char* sqlQry );
 
-int linCCRowsFree( DATA_ROWS* sqlRows, unsigned long* rowCount, unsigned int* collCount );
+/**************************************************************************************************************************
+ * linCCRowsFree( DATA_ROWS* sqlRows, unsigned long* rowCount, unsigned int* collCount )
+ * 
+ * Free DATA_ROWS 3d matrix
+ * 
+ * ex:
+ * linCCRowsFree( database_handler, row_count, coll_count );
+ * 
+ * By given pointer "DATA_ROWS* sqlRows", linCCRowsFree free the allocated space
+ * allocated by linCCgetRows
+ * 
+ * no value returned
+ * 
+ *************************************************************************************************************************/ 
+void linCCRowsFree( DATA_ROWS* sqlRows, unsigned long* rowCount, unsigned int* collCount );
 
 /**************************************************************************************************************************
  * linCCWriteRow( MYSQL* mySqlHndl, const char* sqlQry )

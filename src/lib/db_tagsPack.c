@@ -69,6 +69,10 @@ int getPack ( unsigned long* packLength ) {
         if( tempDB != tempPrevDB || i == *packLength ) {
 // Allocate/reallocate space for packed addresses
             addressPacked = realloc( addressPacked, sizeof( PLCData ) * ( counter + 1 ));
+            if( !addressPacked ) {
+                printf( "Unable to allocate space. addressPacked[] = realloc() error in getPack()\n" );
+                exit( GETPACK_REALLOC_EXIT );
+            }
             
 // Allocate space for store date by PLC reading library
             addressPacked[counter].data = malloc( tempLength );
@@ -109,4 +113,5 @@ int getPack ( unsigned long* packLength ) {
 //   Save the bumer of address
     *packLength = counter;
     
+    return 0;
 }
