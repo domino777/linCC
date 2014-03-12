@@ -56,6 +56,34 @@ class linCC_mysqli extends mysqli {
 
 
     /**
+     * Get the primary key field name of a specific table.
+     *
+     * Perform a 'SHOW KEYS FROM <tname> WHERE Key_name="PRIMARY"' query for
+     * retrieving the column name of the primary key of the given table.
+     *
+     * @param $tname: string representing the name of the table on which take
+     *                the field names
+     *
+     * @return a string representing the column name of the primary key of the
+     *         given table
+     */
+    public function get_pkey($tname) {
+
+        $sql_query = "SHOW KEYS FROM " . $tname . " WHERE Key_name=\"PRIMARY\"";
+        if ($result = $this->query($sql_query)) {
+            $pkey = $result->fetch_assoc()['Column_name'];
+            // free result set
+            $result->free();
+        }
+        else {
+            die("Error: failure on query: " . $sql_query);
+        }
+
+        return $pkey;
+    }
+
+
+    /**
      * Get all values of a column in a specific table.
      *
      * Perform a 'SELECT id, <field_name> FROM <table_name>' query for
@@ -70,10 +98,10 @@ class linCC_mysqli extends mysqli {
      */
     public function get_col($tname, $colname) {
 
-        $pkn = "id"; // primary key name. TODO: this should be defined elsewhere
+        $pkname = $this->get_pkey($tname);
         $values = array();
 
-        $sql_query = "SELECT " . $pkn . "," . $colname . " FROM " . $tname;
+        $sql_query = "SELECT " . $pkname . "," . $colname . " FROM " . $tname;
         if ($result = $this->query($sql_query)) {
             while ($entry = $result->fetch_assoc()) {
                 $values[$entry[$pkn]] = $entry[$colname];
@@ -128,12 +156,38 @@ class linCC_mysqli extends mysqli {
         return $fields;
     }
 
+    /* TODO: this function is still experimental [domyno contribute]
+     */
+    public function getVarList(){
+
+        $fields = array();
+
+        $sql_query =
+        "SELECT id, tagName,PLCConnections.PLCDesc,tagType.name, tagDB, tagByte, tagBIT, rValue, wValue, wFlag, tagComment" .
+        "FROM varList" .
+        "INNER JOIN PLCConnections" .
+        "ON varList.tagPLCNo = PLCConnections.id" .
+        "INNER JOIN tagType" .
+        "ON varList.tagType = tagType.id";
+        if ($result = $this->query($sql_query)) {
+            while ($row = $result->fetch_assoc()) {
+                array_push($fields, $row);
+            }
+            /* free result set */
+            $result->free();
+        }
+        else {
+            die("Error: failure on query: " . $sql_query);
+        }
+
+        return $fields;
+    }
+
 
     /* remove a row in the database
      */
     public function remove($table, $id) {
-        // TODO the primary key should be defined elsewhere
-        $pkname = "id";
+        $pkname = $this->get_pkey($tname);
         $sql_query = "DELETE from " . $table . " WHERE " . $pkname . "=" . $id;
         return $this->query($sql_query);
     }
@@ -142,9 +196,10 @@ class linCC_mysqli extends mysqli {
     /* funzione chiamata da ajax.php
      */
     public function table_update($table, $field, $value, $id) {
-        // TODO the primary key should be defined elsewhere
-        $pkname = "id";
-        $sql_query = "UPDATE " . $table . " SET " . $field . "=\"" . $value . "\" WHERE " . $pkname . "=" . $id;
+        $pkname = $this->get_pkey($tname);
+        $sql_query =
+            "UPDATE " . $table . " SET " . $field . "=\"" . $value .
+            "\" WHERE " . $pkname . "=" . $id;
         return $this->query($sql_query);
     }
 
@@ -187,6 +242,7 @@ function table_body($tname) {
 
     $link = new linCC_mysqli();
     $rows = $link->get($tname);
+    $pkname = $link->get_pkey($tname);
     $link->close();
 
     $tbody = "<tbody>" . PHP_EOL;
@@ -197,8 +253,7 @@ function table_body($tname) {
                 $val = "-";
             }
             $tbody .= "<td";
-            // TODO sto id deve essere definito altrove
-            if ($key !== "id") {
+            if ($key !== $pkname) { // $pkname should not be modificable
                 $tbody .= " class=\"editable\"";
             }
             $tbody .= ">" . $val . "</td>" . PHP_EOL;
