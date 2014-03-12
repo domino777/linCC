@@ -103,8 +103,7 @@ var table_func = {
 
         var row_adder = $("<tr></tr>");
         var colspan = $(this.table).find("tbody tr").last().children("td.editable").size();
-        row_adder.append($("<td style=\"visibility:hidden;\"></td>"))
-                 .append($("<td colspan=\"" + colspan + "\" class=\"row_adder\"></td>").text("add"))
+        row_adder.append($("<td colspan=\"" + colspan + "\" class=\"row_adder\"></td>").text("add"))
                  .on('click', table_func.add_row);
         $(this.table).find("tbody").append(row_adder);
 

@@ -224,10 +224,14 @@ function table_header($tname) {
 
     $link = new linCC_mysqli();
     $field_names = $link->get_fields($tname);
+    $pkname = $link->get_pkey($tname);
     $link->close();
 
     $theader = "<thead>" . PHP_EOL;
     foreach ($field_names as $name) {
+        if ($name === $pkname) {
+            continue;
+        }
         $theader .= "<th>" . $name . "</th>" . PHP_EOL;
     }
     $theader .= "</thead>" . PHP_EOL;
@@ -249,14 +253,13 @@ function table_body($tname) {
     foreach ($rows as $row) {
         $tbody .= "<tr>";
         foreach ($row as $key => $val) {
+            if ($key === $pkname) {
+                continue;
+            }
             if (!isset($val)) {
                 $val = "-";
             }
-            $tbody .= "<td";
-            if ($key !== $pkname) { // $pkname should not be modificable
-                $tbody .= " class=\"editable\"";
-            }
-            $tbody .= ">" . $val . "</td>" . PHP_EOL;
+            $tbody .= "<td class=\"editable\">" . $val . "</td>" . PHP_EOL;
         }
         $tbody .= "</tr>";
     }
