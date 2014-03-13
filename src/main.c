@@ -48,11 +48,11 @@ int main(void) {
 	printf( "DONE!!\nComunication started...\n" );
 	//unsigned int* tagDB, unsigned int* startByte, unsigned int* dataLength, unsigned char* data)
 	while( 1 ) {
-		//sleep( 1 );
+		sleep( 1 );
 		for( int l = 0; l < packCount; l++ )
-			if( !PLCReadTags( &client, &addressPacked[l].db, &addressPacked[l].startByte, &addressPacked[l].dataLength, addressPacked[l].data ) );
-				//for( int i = 0; i < addressPacked[l].dataLength; i++ )
-					//printf( "DB: %d -- DATA BYTE %d -- VALUE: %d \n", addressPacked[l].db, i, addressPacked[l].data[i] );
+			if( !PLCReadTags( &client, &addressPacked[l].db, &addressPacked[l].startByte, &addressPacked[l].dataLength, addressPacked[l].data ) )
+				for( int i = 0; i < addressPacked[l].dataLength; i++ )
+					printf( "DB: %d -- DATA BYTE %d -- VALUE: %d \n", addressPacked[l].db, i, addressPacked[l].data[i] );
 	}
 	/*
 	sleep( 2 );

@@ -86,9 +86,11 @@ int PLCReadTags( S7Object* plcClient, unsigned int* tagDB, unsigned int* startBy
 printf("%d -- %d -- %d --\n", *tagDB, *startByte, *dataLength);
     if( Cli_AsDBRead( *plcClient, *tagDB, *startByte, *dataLength, data ))
         return PLC_DB_READ_ERROR;
-        
-    while( Cli_WaitAsCompletion( *plcClient, 1000));
-
+    
+    int retVal;    
+    while( ( retVal = Cli_WaitAsCompletion( *plcClient, 1000)) == 0x00300000 )
+        if ( retVal )
+            return retVal;
              
     return 0;
 }
