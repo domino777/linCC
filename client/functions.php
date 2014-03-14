@@ -104,7 +104,7 @@ class linCC_mysqli extends mysqli {
         $sql_query = "SELECT " . $pkname . "," . $colname . " FROM " . $tname;
         if ($result = $this->query($sql_query)) {
             while ($entry = $result->fetch_assoc()) {
-                $values[$entry[$pkn]] = $entry[$colname];
+                $values[$entry[$pkname]] = $entry[$colname];
             }
             /* free result set */
             $result->free();
@@ -186,19 +186,19 @@ class linCC_mysqli extends mysqli {
 
     /* remove a row in the database
      */
-    public function remove($table, $id) {
+    public function remove($tname, $id) {
         $pkname = $this->get_pkey($tname);
-        $sql_query = "DELETE from " . $table . " WHERE " . $pkname . "=" . $id;
+        $sql_query = "DELETE from " . $tname . " WHERE " . $pkname . "=" . $id;
         return $this->query($sql_query);
     }
 
 
     /* funzione chiamata da ajax.php
      */
-    public function table_update($table, $field, $value, $id) {
+    public function table_update($tname, $field, $value, $id) {
         $pkname = $this->get_pkey($tname);
         $sql_query =
-            "UPDATE " . $table . " SET " . $field . "=\"" . $value .
+            "UPDATE " . $tname . " SET " . $field . "=\"" . $value .
             "\" WHERE " . $pkname . "=" . $id;
         return $this->query($sql_query);
     }
@@ -206,11 +206,12 @@ class linCC_mysqli extends mysqli {
 
     /* called by form.php
      */
-    public function load($table, $data) {
-        $sql_query = "INSERT INTO " . $table . " VALUES ";
+    public function load($tname, $data) {
+        $sql_query = "INSERT INTO " . $tname . " VALUES ";
         $groups = array();
         foreach ($data as $row) {
-            array_push($groups, "('" . implode("', '", $row) . "')");
+            // TODO: what if primary key is not on first field?
+            array_push($groups, "(NULL, '" . implode("', '", $row) . "')");
         }
         $sql_query .= implode(", ", $groups);
         $this->query($sql_query) or die("impossibile eseguire la query");
@@ -278,10 +279,10 @@ function get_table_names() {
 
 /* Print the table
  */
-function get_table($table_name) { ?>
+function get_table($tname) { ?>
     <table class="table table-condensed table-bordered" id="table">
-        <?php echo table_header($table_name); ?>
-        <?php echo table_body($table_name); ?>
+        <?php echo table_header($tname); ?>
+        <?php echo table_body($tname); ?>
     </table><?php
 }
 
