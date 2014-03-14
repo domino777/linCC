@@ -261,7 +261,7 @@ function table_body($tname) {
             $tbody .=
                 "<td" . ($key === $pkname ?
                             " style=\"display:none;\" " :
-                            "") .
+                            " class=\"editable\" ") .
                 ">" . $val . "</td>" . PHP_EOL;
         }
         $tbody .= "</tr>";
