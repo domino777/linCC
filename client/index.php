@@ -63,43 +63,31 @@ $def_table = $table_names[0];
   </div>
 
   <div class="row" id="csv">
-      <form action="form.php" method="POST" enctype="multipart/form-data">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Upload csv file</h3>
+      </div>
+      <div class="panel-body">
+        <form action="form.php" method="POST" enctype="multipart/form-data">
           <!-- TODO: transform in js | input[type=hidden]@name echoato in maniera intelligente -->
+          <input type="hidden" name="action" value="csv_upload" />
           <input type="hidden" name="table_name" value="<?=$def_table?>" />
-          <input type="file" name="csv"/>
-          <input type="submit"/>
-      </form>
-      <!-- <form class="form-horizontal" role="form">
           <div class="form-group">
-              <label class="sr-only">cvs file
-                  <input type="text" class="form-control" placeholder="cvs file">
-              </label>
-          </div>
-
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="cvs file">
-          </div>
-          <button type="button" class="btn btn-default">
-              <span class="glyphicon glyphicon-open"></span> upload csv
-          </button>
-      </form>
-
-      <form class="form-inline" role="form">
-          <div class="form-group">
-              <label class="sr-only" for="exampleInputEmail2">Email address</label>
-              <input type="email" class="form-control" id="exampleInputEmail2" placeholder="Enter email">
+            <label>File input
+            <input type="file" name="csv_file"/>
+            </label>
           </div>
           <div class="form-group">
-              <label class="sr-only" for="exampleInputPassword2">Password</label>
-              <input type="password" class="form-control" id="exampleInputPassword2" placeholder="Password">
+            <label>Separator
+              <input type="text" class="form-control" name="sep" placeholder="default: ,">
+            </label>
           </div>
-          <div class="checkbox">
-              <label>
-                  <input type="checkbox"> Remember me
-              </label>
+          <div class="form-group">
+            <input class="btn btn-primary" type="submit" value="upload"/>
           </div>
-          <button type="submit" class="btn btn-default">Sign in</button>
-      </form> -->
+        </form>
+      </div>
+    </div>
   </div>
 
   <!-- Bootstrap core JavaScript
