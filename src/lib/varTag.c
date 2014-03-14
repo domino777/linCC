@@ -76,7 +76,7 @@ int loadTags( unsigned long* rowCount ){
     return 0;
 }
 
-int writeTag( unsigned int* tagId, float* tagValue, unsigned int* tagsCount ){
+int writeTag( unsigned int tagId, float tagValue, unsigned long* tagsCount ){
 	
     MYSQL* sqlHndl;  
     char sqlQry[256];
@@ -84,9 +84,9 @@ int writeTag( unsigned int* tagId, float* tagValue, unsigned int* tagsCount ){
 	unsigned int strLength = 0;
 //  Create my SQL connection and get row count of vatList table
     linCCConnect( &sqlHndl );
-	for( unsigned int i = 0; i < *tagsCount; i++ ){
-        sprintf( sqlQry, "UPDATE varList SET rValue=%f WHERE id=%d", tagValue[i], tagId[i] );
+	//for( unsigned int i = 0; i < *tagsCount; i++ ){
+        sprintf( sqlQry, "UPDATE varList SET rValue=%f WHERE id=%d", tagValue, tagId );
         linCCWriteRow( sqlHndl, ( const char *)sqlQry );
-    }
+   // }
     linCCDisconnect( sqlHndl );
 }

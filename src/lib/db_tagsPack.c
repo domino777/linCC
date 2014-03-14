@@ -26,7 +26,7 @@
 
 #include "db_tagsPack.h"
 
-int getPack ( unsigned long* packLength ) {
+int getPack ( unsigned int* packLength ) {
 	
     MYSQL* sqlHndl;  
 
@@ -42,7 +42,7 @@ int getPack ( unsigned long* packLength ) {
     
     unsigned int collCount = 3;
     int retVal;
-    if ( retVal = linCCgetRows( sqlHndl, &tagsList, packLength, collCount, "SELECT DISTINCT tagType, tagDB, tagBYTE from varList ORDER BY tagType, tagDB, tagBYTE ASC" ))
+    if ( retVal = linCCgetRows( sqlHndl, &tagsList, ( unsigned long *)packLength, collCount, "SELECT DISTINCT tagType, tagDB, tagBYTE from varList ORDER BY tagType, tagDB, tagBYTE ASC" ))
         return retVal;
     
     const char* rowField;
@@ -108,7 +108,7 @@ int getPack ( unsigned long* packLength ) {
         tempPrevDB = tempDB;
     }
     
-    linCCRowsFree( tagsList, packLength, &collCount );
+    linCCRowsFree( tagsList, ( unsigned long *)packLength, &collCount );
     linCCDisconnect( sqlHndl );	
     
 //   Save the bumer of address

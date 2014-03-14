@@ -64,6 +64,6 @@ extern PLCData* addressPacked;
  * 0 returned if no issue are found
  * 
  *************************************************************************************************************************/ 
-int getPack ( unsigned long* packLength );
+int getPack ( unsigned int* packLength );
 
 #endif  // _db_tagsPack_h_
