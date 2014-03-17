@@ -126,7 +126,7 @@ int linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS** sqlRows, unsigned long* rowCount
             strcpy( ( char *)tempRows[i][pi], mySqlRow[pi] );
         }
 	}
-	
+		
     *sqlRows = tempRows;
 	*rowCount = i;	
     mysql_free_result( mySqlRes );
@@ -139,7 +139,7 @@ int linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS** sqlRows, unsigned long* rowCount
 
 void linCCRowsFree( DATA_ROWS* sqlRows, unsigned long* rowCount, unsigned int* collCount ){
 	
-//  I want to break free
+//  I want to break free!!
     for( int i = 0; i < *rowCount; i++ ) {
         for( int coll = 0; coll < *collCount; coll++ )
             free( sqlRows[i][coll] );

@@ -78,6 +78,8 @@ float PLCReadTag( S7Object* plcClient, unsigned int* tagDB, unsigned long* tagBy
              
          return 0.0;
      }
+     
+     return 0xFFFFFFFF;
 }
 
 int PLCReadTags( S7Object* plcClient, unsigned int* tagDB, unsigned int* startByte, unsigned int* dataLength, unsigned char* data) {

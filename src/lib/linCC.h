@@ -63,7 +63,6 @@ typedef struct {
 	S7Object* client;
 } PLCThread;
 
-
 enum variableType { noType, Bool, Byte, Word, Int, DInt, Real };
 
 #endif  // _linCC_h_
