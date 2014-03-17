@@ -1,5 +1,10 @@
-/*
- *	commInfo.h
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+my $licenseHeader =<< "FILEHEADER"
+
  *
  *  "Copyright 2014 Mauro Ghedin"
  *
@@ -18,23 +23,31 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  *  MA 02110-1301, USA.
  *
- *       @author         : Mauro Ghedin
- *       @contact        : domyno88 at gmail dot com
- *       @version        : 0.1
+ *       \@author         : Mauro Ghedin
+ *       \@contact        : domyno88 at gmail dot com
+ *       \@version        : 0.1
  *
  */
 
-#ifndef _commInfo_h
-#define _commInfo_h
+FILEHEADER
+;
 
-#include <stdio.h>
-#include <string.h>
-#include "dbAccess.h"
-#include "errors.h"
-#include "linCC.h"
+print "File name to generate: ";
 
-#define commTable        "PLCConnections"
+my $fileName = <STDIN>;
+chomp $fileName;
 
-PLC_CONN_INFO* linCCPLCgetInfo();
+open( CFILE, ">", $fileName."\.c" );
+open( HFILE, ">", $fileName."\.h" );
 
-#endif // _commInfo_h
+print CFILE "/*  \n *  ".$fileName."\.c";
+print CFILE $licenseHeader;
+
+print HFILE "/*  \n *  ".$fileName."\.h";
+print HFILE $licenseHeader;
+print HFILE "#ifndef _".$fileName."_h_\n";
+print HFILE "#define _".$fileName."_h_\n\n\n";
+print HFILE "#endif  // _".$fileName."_h_\n";
+
+close CFILE;
+close HFILE;

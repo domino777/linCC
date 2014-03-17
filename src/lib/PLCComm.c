@@ -26,7 +26,14 @@
 
 #include "PLCComm.h"
 
-int varTagGetValues ( TAG_VAR* tagList, PLCData* dataPackage, unsigned long* tagCount, unsigned int *packageCount ) {
+int varTagGetValues ( TAG_VAR* tagList, U_TAG_VAR** tagListUp, PLCData* dataPackage, unsigned long* tagCount, unsigned long* updateTagCount, unsigned int *packageCount ) {
+    
+    float retTempFloat = 0.0;
+    
+    U_TAG_VAR* tempVar;
+    tempVar = NULL;
+    
+    unsigned long tagCountUp = 0;
     
     for( unsigned long i = 0; i < *tagCount; i++ ) {
 		
@@ -41,7 +48,7 @@ int varTagGetValues ( TAG_VAR* tagList, PLCData* dataPackage, unsigned long* tag
 //  Read error detection
 
              int tempVar = dataPackage[pkgIndex].data[ ( tagList[i].address - dataPackage[pkgIndex].startByte ) ] << 8;
-             tagList[i].tagValue = ( float )( tempVar = tempVar | dataPackage[pkgIndex].data[ ( tagList[i].address - dataPackage[pkgIndex].startByte + 1 ) ] );
+             retTempFloat = ( float )( tempVar = tempVar | dataPackage[pkgIndex].data[ ( tagList[i].address - dataPackage[pkgIndex].startByte + 1 ) ] );
         }
     
        else if( tagList[i].type  == Real ) {
@@ -52,14 +59,27 @@ int varTagGetValues ( TAG_VAR* tagList, PLCData* dataPackage, unsigned long* tag
            *((unsigned char*)(&tempFloat) + 1) = dataPackage[pkgIndex].data[ ( tagList[i].address - dataPackage[pkgIndex].startByte + 2 ) ];
            *((unsigned char*)(&tempFloat) + 0) = dataPackage[pkgIndex].data[ ( tagList[i].address - dataPackage[pkgIndex].startByte + 3 ) ];
 
-            tagList[i].tagValue = tempFloat;
+           retTempFloat = tempFloat;
+           //printf("Value float: %f\n", retTempFloat );
         }
     
         else if( tagList[i].type  == Bool ) {
             if ( dataPackage[pkgIndex].data[ ( tagList[i].address - dataPackage[pkgIndex].startByte ) ] & ( 0x0001 << tagList[i].addressBit ) )
-                tagList[i].tagValue = 1.0;
+                retTempFloat = 1.0;
         }
+        
+        if( tagList[i].tagValue != retTempFloat ) {
+			tagCountUp++;
+		    tempVar = realloc( tempVar, sizeof( U_TAG_VAR ) * tagCountUp );
+		    tempVar[ tagCountUp - 1 ].id = tagList[i].id;
+		    tempVar[ tagCountUp - 1 ].tagValue = retTempFloat;
+		}
+		
+		tagList[i].tagValue = retTempFloat;
     }
+    
+    *updateTagCount = tagCountUp;
+    *tagListUp = tempVar;
     
     return 0;
 }

@@ -1,5 +1,5 @@
-/*
- *	commInfo.h
+/*  
+ *  linCC.h
  *
  *  "Copyright 2014 Mauro Ghedin"
  *
@@ -24,17 +24,38 @@
  *
  */
 
-#ifndef _commInfo_h
-#define _commInfo_h
+#ifndef _linCC_h_
+#define _linCC_h_
 
-#include <stdio.h>
-#include <string.h>
-#include "dbAccess.h"
-#include "errors.h"
-#include "linCC.h"
+typedef struct{
+    unsigned int id;
+    float tagValue;
+} U_TAG_VAR;
 
-#define commTable        "PLCConnections"
+typedef struct{
+	unsigned int id;
+	unsigned char type;
+	unsigned int db;
+	unsigned long address;
+	unsigned char addressBit;
+	float tagValue;
+} TAG_VAR;
 
-PLC_CONN_INFO* linCCPLCgetInfo();
+typedef struct {
+    unsigned int db;
+    unsigned int startByte;
+    unsigned int dataLength;
+    unsigned char* data;
+} PLCData;
 
-#endif // _commInfo_h
+typedef struct{
+    unsigned int id;
+    unsigned int rack;
+    unsigned int slot;
+    unsigned int port;
+    char ip[16];	
+} PLC_CONN_INFO;
+
+enum variableType { noType, Bool, Byte, Word, Int, DInt, Real };
+
+#endif  // _linCC_h_

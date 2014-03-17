@@ -29,21 +29,13 @@
 
 #include "dbAccess.h"
 #include "errors.h"
+#include "linCC.h"
 
 #define MYSQL_DB_VARTAG_QRY "SELECT id, tagType, tagDB, tagBYTE, tagBIT FROM varList ORDER BY tagType, tagDB, tagBYTE ASC"
-
-typedef struct{
-	unsigned int id;
-	unsigned char type;
-	unsigned int db;
-	unsigned long address;
-	unsigned char addressBit;
-	float tagValue;
-} TAG_VAR;
 
 extern TAG_VAR* VarTags;
 
 int loadTags( unsigned long* rowCount );
-int writeTag( unsigned int tagId, float tagValue, unsigned long* tagsCount );
+int writeTag( U_TAG_VAR* tagVar, unsigned long* tagsCount );
 
 #endif // _varTag_h

@@ -30,7 +30,8 @@
 #include "varTag.h"
 #include "db_tagsPack.h"
 #include "libPLC.h"
+#include "linCC.h"
 
-int varTagGetValues ( TAG_VAR* tagList, PLCData* dataPackage, unsigned long* tagCount, unsigned int *packageCount );
+int varTagGetValues ( TAG_VAR* tagList, U_TAG_VAR** tagListUp, PLCData* dataPackage, unsigned long* tagCount, unsigned long* updateTagCount, unsigned int *packageCount );
 
 #endif // _PLCComm_h_

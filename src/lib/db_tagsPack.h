@@ -29,13 +29,7 @@
 
 #include "dbAccess.h"
 #include "errors.h"
-
-typedef struct {
-    unsigned int db;
-    unsigned int startByte;
-    unsigned int dataLength;
-    unsigned char* data;
-} PLCData;
+#include "linCC.h"
 
 extern PLCData* addressPacked;
 

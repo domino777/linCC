@@ -30,6 +30,7 @@
 #include "snap7.h"
 #include <stdio.h>
 #include "errors.h"
+#include "linCC.h"
 
 #define snap7PLCIp           192.168.102.1
 #define snap7PLCRack         0
@@ -40,9 +41,6 @@
 #define _BYTE_4_             4
 
 #define PLC_DB_READ_ERROR    0xFFFFFFFF
-
-enum variableType { noType, Bool, Byte, Word, Int, DInt, Real };
-
 
 int PLCConnect( S7Object* plcClient, const char* plcIp, int* plcRack, int* plcSlot );
 int PLCDisconnect( S7Object* plcClient );

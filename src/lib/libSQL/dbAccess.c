@@ -102,13 +102,13 @@ int linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS** sqlRows, unsigned long* rowCount
     for( i = 0; ( mySqlRow = mysql_fetch_row( mySqlRes )) != NULL; i++){
 
 //      Reallocation of matrix array [][]
-		tempRows = realloc( tempRows, 8 * ( i + 1 ));
+		tempRows = realloc( tempRows, sizeof( tempRows ) * ( i + 1 ));
 		if( !tempRows ) {
 		    printf( "Unable to allocate space. tempRows = realloc() error in linCCgetRow()\n" );
 		    exit( 1 );
 		}
 		    
-        tempRows[i] = malloc( 8 * ( collOnQry ));
+        tempRows[i] = malloc( sizeof( tempRows ) * ( collOnQry ));
         if( !tempRows[i] ) {
 		    printf( "Unable to allocate space. tempRows[] = malloc() error in linCCgetRow()\n" );
 		    exit( 1 );
