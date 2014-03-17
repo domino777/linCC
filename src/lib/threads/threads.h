@@ -1,5 +1,5 @@
 /*  
- *  linCC.h
+ *  threads.h
  *
  *  "Copyright 2014 Mauro Ghedin"
  *
@@ -24,46 +24,16 @@
  *
  */
 
-#ifndef _linCC_h_
-#define _linCC_h_
+#ifndef _threads_h_
+#define _threads_h_
 
-#include "snap7.h"
+#include <pthread.h>
+#include "libPLC.h"
+#include "linCC.h"
 
-typedef struct{
-    unsigned int id;
-    float tagValue;
-} U_TAG_VAR;
+extern PLCData* addressPacked;
 
-typedef struct{
-	unsigned int id;
-	unsigned char type;
-	unsigned int db;
-	unsigned long address;
-	unsigned char addressBit;
-	float tagValue;
-} TAG_VAR;
-
-typedef struct {
-    unsigned int db;
-    unsigned int startByte;
-    unsigned int dataLength;
-    unsigned char* data;
-} PLCData;
-
-typedef struct{
-    unsigned int id;
-    unsigned int rack;
-    unsigned int slot;
-    unsigned int port;
-    char ip[16];	
-} PLC_CONN_INFO;
-
-typedef struct {
-	unsigned int* packCount;
-	S7Object* client;
-} PLCThread;
+int threadPLCRead( pthread_t* thread, PLCThread* threadData );
 
 
-enum variableType { noType, Bool, Byte, Word, Int, DInt, Real };
-
-#endif  // _linCC_h_
+#endif  // _threads_h_

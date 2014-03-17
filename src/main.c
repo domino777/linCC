@@ -7,32 +7,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <pthread.h>
-#include <unistd.h>
+#include "threads.h"
 
 TAG_VAR* VarTags;
 PLCData* addressPacked;
 
-typedef struct {
-	unsigned int* packCount;
-	S7Object* client;
-} prova_pt;
-
-void* prova( prova_pt* ptpt ){
-	printf("PRPRPR: %d\n", *ptpt->packCount);
-	while(1){
-		usleep( 500000 );
-	    for( int l = 0; l < *(ptpt->packCount); l++ )
-			PLCReadTags( ptpt->client, &addressPacked[l].db, &addressPacked[l].startByte, &addressPacked[l].dataLength, addressPacked[l].data );
-	}
-}
-
-
 int main(void) {
-    
-    pthread_t thread1;
-    int  iret1;
-    
+        
     unsigned long rowCount;// = malloc( sizeof( unsigned long ));
     unsigned int packCount;
     printf( "Packing address...\n" );
@@ -71,8 +52,12 @@ int main(void) {
 	
 	//prova( &packCount, &client );
 	
-	iret1 = pthread_create( &thread1, NULL, prova, &(prova_pt){ &packCount,  &client } );
-
+    PLCThread plcData;
+    plcData.packCount = &packCount;
+    plcData.client = &client;
+    
+    pthread_t thread;
+    threadPLCRead( &thread, &plcData );
 	unsigned long tagUpdateCount;
 	
 	//unsigned int* tagDB, unsigned int* startByte, unsigned int* dataLength, unsigned char* data)
