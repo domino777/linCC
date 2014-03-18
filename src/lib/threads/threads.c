@@ -36,6 +36,5 @@ void* thPLCLoop( PLCThread* ptpt ) {
 }
 
 int threadPLCRead( pthread_t* thread, PLCThread* threadData ) {
-	int retVal;
-    retVal = pthread_create( thread, NULL, thPLCLoop, threadData );
+    return pthread_create( thread, NULL, thPLCLoop, threadData );
 }

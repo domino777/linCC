@@ -8,9 +8,17 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "threads.h"
+#include <signal.h>
 
 TAG_VAR* VarTags;
 PLCData* addressPacked;
+
+
+void exitMsg( int signNo ){
+	printf("\n\n ----------------------------- \n ");
+	printf("\n\n linCC now exit. Goodbye ;) \n ");
+	exit(0);
+}
 
 int main(void) {
         
@@ -61,6 +69,8 @@ int main(void) {
 	unsigned long tagUpdateCount;
 	
 	//unsigned int* tagDB, unsigned int* startByte, unsigned int* dataLength, unsigned char* data)
+	signal( SIGINT, exitMsg );
+	
 	while( 1 ) {
         sleep(1);		
 		U_TAG_VAR* tagUpdate;
