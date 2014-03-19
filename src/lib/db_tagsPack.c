@@ -54,6 +54,7 @@ int getPack ( unsigned int* packLength ) {
     unsigned int tempBYTE, tempStartByte, tempPrevByte = 0;
     unsigned int tempLength = 0;
     unsigned int counter = 0;
+    unsigned int lastByte = 0;
     
     for( unsigned long i = 0; i <= *packLength; i++ ){
 		if( i < *packLength ) {
@@ -66,7 +67,7 @@ int getPack ( unsigned int* packLength ) {
             tempPrevDB = tempDB;
             tempStartByte = tempBYTE;
         }
-        
+                            
         if( tempDB != tempPrevDB || i == *packLength ) {
 // Allocate/reallocate space for packed addresses
             addressPacked = realloc( addressPacked, sizeof( PLCData ) * ( counter + 1 ));
@@ -76,36 +77,35 @@ int getPack ( unsigned int* packLength ) {
             }
             
 // Allocate space for store date by PLC reading library
-            addressPacked[counter].data = malloc( tempLength );
             addressPacked[counter].db = tempPrevDB;
             addressPacked[counter].startByte = tempStartByte;
-            addressPacked[counter].dataLength =  tempLength;
+            addressPacked[counter].dataLength =  ( lastByte + tempLength ) - tempStartByte;
+            addressPacked[counter].data = malloc( addressPacked[counter].dataLength );
             
 // Syncronize previous value with current value
             tempPrevDB = tempDB;
             tempStartByte = tempBYTE;
             
 // Clearing length and inc counter
-            tempLength = 0;
             counter++;
         }
-        
-        if( i < *packLength )
-		    switch( tempType ) {
-                case 1: case 2:
-                    tempLength += 1;
-                break;
+            
+        switch( tempType ) {
+            case 1: case 2:
+                tempLength = 1;
+            break;
 
-                case 3: case 4:
-                    tempLength += 2;
-                break;
+            case 3: case 4:
+                tempLength = 2;
+            break;
 
-                case 5: case 6:
-                    tempLength += 4;
-                break;
-            }
+            case 5: case 6:
+                tempLength = 4;
+            break;
+        }
         
         tempPrevDB = tempDB;
+        lastByte = tempBYTE;
     }
     
     linCCRowsFree( tagsList, ( unsigned long *)packLength, &collCount );

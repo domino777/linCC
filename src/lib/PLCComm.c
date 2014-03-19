@@ -26,6 +26,8 @@
 
 #include "PLCComm.h"
 
+unsigned char firstRun = 0;
+
 int varTagGetValues ( TAG_VAR* tagList, U_TAG_VAR** tagListUp, PLCData* dataPackage, unsigned long* tagCount, unsigned long* updateTagCount, unsigned int *packageCount ) {
     
     float retTempFloat = 0.0;
@@ -68,7 +70,7 @@ int varTagGetValues ( TAG_VAR* tagList, U_TAG_VAR** tagListUp, PLCData* dataPack
                 retTempFloat = 1.0;
         }
         
-        if( tagList[i].tagValue != retTempFloat ) {
+        if( tagList[i].tagValue != retTempFloat || !firstRun ) {
 			tagCountUp++;
 		    tempVar = realloc( tempVar, sizeof( U_TAG_VAR ) * tagCountUp );
 		    tempVar[ tagCountUp - 1 ].id = tagList[i].id;
@@ -80,6 +82,7 @@ int varTagGetValues ( TAG_VAR* tagList, U_TAG_VAR** tagListUp, PLCData* dataPack
     
     *updateTagCount = tagCountUp;
     *tagListUp = tempVar;
+    firstRun = 1;
     
     return 0;
 }
