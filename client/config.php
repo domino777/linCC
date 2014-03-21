@@ -10,6 +10,6 @@ define( "DB_PASS", "linCC");     // database password for given user
 define( "DB_NAME", "linCC");     // database name to perform queries
 
 // TODO this information should stay in the database
-$table_names = [ "varList", "PLCConnections" ];
+$table_names = array( "varList", "PLCConnections" );
 
 ?>

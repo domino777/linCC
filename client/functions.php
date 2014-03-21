@@ -71,7 +71,7 @@ class linCC_mysqli extends mysqli {
 
         $sql_query = "SHOW KEYS FROM " . $tname . " WHERE Key_name=\"PRIMARY\"";
         if ($result = $this->query($sql_query)) {
-            $pkey = $result->fetch_assoc()['Column_name'];
+            $pkey = $result->fetch_assoc(); $pkey = $pkey['Column_name'];
             // free result set
             $result->free();
         }
