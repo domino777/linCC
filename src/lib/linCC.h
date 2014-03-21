@@ -35,12 +35,12 @@ typedef struct{
 } U_TAG_VAR;
 
 typedef struct{
-	unsigned int id;
-	unsigned char type;
-	unsigned int db;
-	unsigned long address;
-	unsigned char addressBit;
-	float tagValue;
+    unsigned int id;
+    unsigned char type;
+    unsigned int db;
+    unsigned long address;
+    unsigned char addressBit;
+    float tagValue;
 } TAG_VAR;
 
 typedef struct {
@@ -55,12 +55,12 @@ typedef struct{
     unsigned int rack;
     unsigned int slot;
     unsigned int port;
-    char ip[16];	
+    char ip[16];
 } PLC_CONN_INFO;
 
 typedef struct {
-	unsigned int* packCount;
-	S7Object* client;
+    unsigned int* packCount;
+    S7Object* client;
 } PLCThread;
 
 enum variableType { noType, Bool, Byte, Word, Int, DWord, DInt, Real };

@@ -27,8 +27,8 @@
 #include "varTag.h"
 
 int loadTags( unsigned long* rowCount ){
-	
-	MYSQL* sqlHndl;  
+    
+    MYSQL* sqlHndl;  
 
 //  Create my SQL connection and get row count of vatList table
     linCCConnect( &sqlHndl );
@@ -39,9 +39,9 @@ int loadTags( unsigned long* rowCount ){
 //  ------> tags <------- is extern TAG_VAR*    
     VarTags = malloc( sizeof( TAG_VAR ) * *rowCount );
     if( !VarTags ) {
-		printf( "Unable to allocate space for 'tags' by malloc in loadTags()\n" );
-		exit( DBVARTAG_MALLOC_ERROR );
-	}
+        printf( "Unable to allocate space for 'tags' by malloc in loadTags()\n" );
+        exit( DBVARTAG_MALLOC_ERROR );
+    }
     
 //  Retrive tag list from databese
     DATA_ROWS* tagsList;
@@ -54,37 +54,37 @@ int loadTags( unsigned long* rowCount ){
     const char* rowField;
     
     for( unsigned long i = 0; i < *rowCount; i++ ){
-//	Convert id char* field into unsigned int value
+//  Convert id char* field into unsigned int value
         VarTags[i].id = ( unsigned int )strtol(( const char *)tagsList[i][0], NULL, 10 );
         
-//	Convert type char* field into unsigned int value
+//  Convert type char* field into unsigned int value
        VarTags[i].type = ( unsigned char )strtol(( const char *)tagsList[i][1], NULL, 10 );
         
-//	Convert db char* field into unsigned int value
+//  Convert db char* field into unsigned int value
         VarTags[i].db = ( unsigned int )strtol(( const char *)tagsList[i][2], NULL, 10 );
 
-//	Convert byte address char* field into unsigned long value        
+//  Convert byte address char* field into unsigned long value        
         VarTags[i].address = ( unsigned long )strtol(( const char *)tagsList[i][3], NULL, 10 );
-		
-//	Convert bit of byte address char* field into unsigned int value
-        VarTags[i].addressBit = ( unsigned char )strtol(( const char *)tagsList[i][4], NULL, 10 );
-    }	
 
-	free( tagsList ); 
+//  Convert bit of byte address char* field into unsigned int value
+        VarTags[i].addressBit = ( unsigned char )strtol(( const char *)tagsList[i][4], NULL, 10 );
+    }
+
+    free( tagsList ); 
     linCCDisconnect( sqlHndl );
     
     return 0;
 }
 
 int writeTag( U_TAG_VAR* tagVar, unsigned long* tagsCount ) {
-	
+
     MYSQL* sqlHndl;  
     char sqlQry[256];
     
-	unsigned int strLength = 0;
+    unsigned int strLength = 0;
 //  Create my SQL connection and get row count of vatList table
     linCCConnect( &sqlHndl );
-	for( unsigned int i = 0; i < *tagsCount; i++ ) {
+    for( unsigned int i = 0; i < *tagsCount; i++ ) {
         sprintf( sqlQry, "UPDATE varList SET rValue=%f WHERE id=%d", tagVar[i].tagValue, tagVar[i].id );
         printf( "QRY: %s\n", sqlQry );
         int retVal = linCCWriteRow( sqlHndl, ( const char *)sqlQry );

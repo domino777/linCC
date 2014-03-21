@@ -38,22 +38,37 @@ int varTagGetValues ( TAG_VAR* tagList, U_TAG_VAR** tagListUp, PLCData* dataPack
     unsigned long tagCountUp = 0;
     
     for( unsigned long i = 0; i < *tagCount; i++ ) {
-		
-		int pkgIndex = 0;
-		while( tagList[i].db != dataPackage[pkgIndex].db )
-		    pkgIndex++;
-		  
-       // tagList[i].tagValue = ( float )dataPackage[pkgIndex].data[ ( dataPackage[pkgIndex].startByte - tagList[i].address ) ];
-        
-//  Getting plc's INT or WORD value
-        if( tagList[i].type == Word || tagList[i].type == Int ) {		 
-//  Read error detection
 
-             int tempVar = dataPackage[pkgIndex].data[ ( tagList[i].address - dataPackage[pkgIndex].startByte ) ] << 8;
-             retTempFloat = ( float )( tempVar = tempVar | dataPackage[pkgIndex].data[ ( tagList[i].address - dataPackage[pkgIndex].startByte + 1 ) ] );
+        int pkgIndex = 0;
+        while( tagList[i].db != dataPackage[pkgIndex].db )
+            pkgIndex++;
+
+//  Getting plc's INT or WORD value
+        if( tagList[i].type == Word || tagList[i].type == Int ) {
+        
+            int tempVar = dataPackage[pkgIndex].data[ ( tagList[i].address - dataPackage[pkgIndex].startByte ) ] << 8;
+            tempVar     = tempVar = tempVar | dataPackage[pkgIndex].data[ ( tagList[i].address - dataPackage[pkgIndex].startByte + 1 ) ];
+            if( tagList[i].type == Word )
+                retTempFloat = ( float )( unsigned int )tempVar;
+            else
+                retTempFloat = ( float )( short int )tempVar;
+        }
+        
+        else if( tagList[i].type  == DWord || tagList[i].type  == DInt ) {
+        
+            long tempLong;
+            *((unsigned char*)(&tempLong) + 3) = dataPackage[pkgIndex].data[ ( tagList[i].address - dataPackage[pkgIndex].startByte + 0 ) ];
+            *((unsigned char*)(&tempLong) + 2) = dataPackage[pkgIndex].data[ ( tagList[i].address - dataPackage[pkgIndex].startByte + 1 ) ];
+            *((unsigned char*)(&tempLong) + 1) = dataPackage[pkgIndex].data[ ( tagList[i].address - dataPackage[pkgIndex].startByte + 2 ) ];
+            *((unsigned char*)(&tempLong) + 0) = dataPackage[pkgIndex].data[ ( tagList[i].address - dataPackage[pkgIndex].startByte + 3 ) ];
+            
+            if( tagList[i].type == DWord )
+                retTempFloat = ( float )( unsigned long )tempLong;
+            else
+                retTempFloat = ( float )tempLong;
         }
     
-       else if( tagList[i].type  == Real ) {
+        else if( tagList[i].type  == Real ) {
 
            float tempFloat;
            *((unsigned char*)(&tempFloat) + 3) = dataPackage[pkgIndex].data[ ( tagList[i].address - dataPackage[pkgIndex].startByte + 0 ) ];
@@ -71,13 +86,13 @@ int varTagGetValues ( TAG_VAR* tagList, U_TAG_VAR** tagListUp, PLCData* dataPack
         }
         
         if( tagList[i].tagValue != retTempFloat || !firstRun ) {
-			tagCountUp++;
-		    tempVar = realloc( tempVar, sizeof( U_TAG_VAR ) * tagCountUp );
-		    tempVar[ tagCountUp - 1 ].id = tagList[i].id;
-		    tempVar[ tagCountUp - 1 ].tagValue = retTempFloat;
-		}
-		
-		tagList[i].tagValue = retTempFloat;
+            tagCountUp++;
+            tempVar = realloc( tempVar, sizeof( U_TAG_VAR ) * tagCountUp );
+            tempVar[ tagCountUp - 1 ].id = tagList[i].id;
+            tempVar[ tagCountUp - 1 ].tagValue = retTempFloat;
+        }
+
+        tagList[i].tagValue = retTempFloat;
     }
     
     *updateTagCount = tagCountUp;
