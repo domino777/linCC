@@ -99,7 +99,7 @@ int getPack ( unsigned int* packLength ) {
                 tempLength = 2;
             break;
 
-            case 5: case 6:
+            case 5: case 6: case 7:
                 tempLength = 4;
             break;
         }
