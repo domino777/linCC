@@ -21,6 +21,12 @@ class linCC_mysqli extends mysqli {
             die('Connect Error (' . mysqli_connect_errno() . ') ' .
                 mysqli_connect_error());
         }
+
+        // change character set to utf8
+        if (!$this->set_charset("utf8")) {
+            printf("<p>Error loading character set utf8: %s\n</p>", $this->error);
+        }
+
     }
 
 

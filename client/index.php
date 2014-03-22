@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <?php
 
 require('./functions.php');
@@ -5,7 +6,7 @@ require('./functions.php');
 $table_names = get_table_names();
 $def_table = $table_names[0];
 
-?><!DOCTYPE html>
+?>
 
 <html>
 <head>
