@@ -59,15 +59,18 @@ int loadTags( unsigned long* rowCount ){
         
 //  Convert type char* field into unsigned int value
        VarTags[i].type = ( unsigned char )strtol(( const char *)tagsList[i][1], NULL, 10 );
-        
+
 //  Convert db char* field into unsigned int value
-        VarTags[i].db = ( unsigned int )strtol(( const char *)tagsList[i][2], NULL, 10 );
+        VarTags[i].accessType = ( unsigned int )strtol(( const char *)tagsList[i][2], NULL, 10 );
+                
+//  Convert db char* field into unsigned int value
+        VarTags[i].db = ( unsigned int )strtol(( const char *)tagsList[i][3], NULL, 10 );
 
 //  Convert byte address char* field into unsigned long value        
-        VarTags[i].address = ( unsigned long )strtol(( const char *)tagsList[i][3], NULL, 10 );
+        VarTags[i].address = ( unsigned long )strtol(( const char *)tagsList[i][4], NULL, 10 );
 
 //  Convert bit of byte address char* field into unsigned int value
-        VarTags[i].addressBit = ( unsigned char )strtol(( const char *)tagsList[i][4], NULL, 10 );
+        VarTags[i].addressBit = ( unsigned char )strtol(( const char *)tagsList[i][5], NULL, 10 );
     }
 
     free( tagsList ); 

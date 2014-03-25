@@ -37,6 +37,7 @@ typedef struct{
 typedef struct{
     unsigned int id;
     unsigned char type;
+    unsigned int accessType;
     unsigned int db;
     unsigned long address;
     unsigned char addressBit;

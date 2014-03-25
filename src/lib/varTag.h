@@ -31,7 +31,7 @@
 #include "errors.h"
 #include "linCC.h"
 
-#define MYSQL_DB_VARTAG_QRY "SELECT id, tagType, tagDB, tagBYTE, tagBIT FROM varList ORDER BY tagType, tagDB, tagBYTE ASC"
+#define MYSQL_DB_VARTAG_QRY "SELECT id, tagType, tagAccess, tagDB, tagBYTE, tagBIT FROM varList ORDER BY tagType, tagDB, tagBYTE ASC"
 
 extern TAG_VAR* VarTags;
 
