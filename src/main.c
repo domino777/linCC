@@ -15,8 +15,8 @@ PLCData* addressPacked;
 
 
 void exitMsg( int signNo ){
-    printf("\n\n ----------------------------- \n ");
-    printf("\n\n linCC now exit. Goodbye ;) \n ");
+    printf("\n\n----------------------------- \n ");
+    printf("\n\nlinCC now exit. Goodbye ;) \n ");
     exit(0);
 }
 

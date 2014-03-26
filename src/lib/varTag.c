@@ -33,7 +33,7 @@ int loadTags( unsigned long* rowCount ){
 //  Create my SQL connection and get row count of vatList table
     linCCConnect( &sqlHndl );
     *rowCount = linCCRowCount( sqlHndl, "varList" );
-    if( *rowCount == 0)
+    if( *rowCount == 0 )
         return LINCC_NO_TAGS_FOUND;
     
 //  ------> tags <------- is extern TAG_VAR*    
@@ -48,7 +48,7 @@ int loadTags( unsigned long* rowCount ){
     
     //linCCgetRows( sqlHndl, &tagsList, MYSQL_DB_VARTAG_QRY );
     int retVal;
-    if ( retVal = linCCgetRows( sqlHndl, &tagsList, rowCount, 5, MYSQL_DB_VARTAG_QRY ))
+    if ( retVal = linCCgetRows( sqlHndl, &tagsList, rowCount, 6, MYSQL_DB_VARTAG_QRY ))
         return retVal;
     
     const char* rowField;

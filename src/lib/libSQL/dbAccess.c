@@ -29,18 +29,18 @@
  int linCCConnect( MYSQL** mySqlHndl ) {
 
 //  mySQL handler creation
-	*mySqlHndl = mysql_init( NULL );
+    *mySqlHndl = mysql_init( NULL );
 //  Pointer error, service MUST TO BE CLOSE!!!!!!!
-	if ( *mySqlHndl == NULL ) {
-		printf( "%s", "\nUnable to create mySQL handler\n" );
-		exit( MYSQL_INIT_ERROR );
-	}
-	
+    if ( *mySqlHndl == NULL ) {
+        printf( "%s", "\nUnable to create mySQL handler\n" );
+        exit( MYSQL_INIT_ERROR );
+    }
+    
 //  Try to connec to mariaDB database
     if ( !mysql_real_connect( *mySqlHndl, dbUrl, dbUser, dbPwd, dbBase,  0, NULL, 0 ))
-		return MYSQL_CONN_ERROR ;
+        return MYSQL_CONN_ERROR ;
 
-	return 0;
+    return 0;
 }
 
 void linCCDisconnect( MYSQL* mySqlHndl ){
@@ -51,30 +51,30 @@ void linCCDisconnect( MYSQL* mySqlHndl ){
 unsigned long linCCRowCount( MYSQL* mySqlHndl, char* tableName ){
 
 //  SQL query for return table row count
-	char qryStr[256] = "SELECT COUNT(*) FROM ";
+    char qryStr[256] = "SELECT COUNT(*) FROM ";
 
 //  Concatenating string
-	strcat( qryStr, tableName );
-		
-	const char* qryStrConst = qryStr;
+    strcat( qryStr, tableName );
+
+    const char* qryStrConst = qryStr;
 
 //  Send SQL query to Databases	
-	mysql_query( mySqlHndl, qryStrConst );
+    mysql_query( mySqlHndl, qryStrConst );
 
 //  Using resource
-	MYSQL_RES *mySqlRes;
-	mySqlRes = mysql_use_result( mySqlHndl );
-	
-//  Getting row
-	MYSQL_ROW mySqlRow;
-	mySqlRow = mysql_fetch_row( mySqlRes );
+    MYSQL_RES *mySqlRes;
+    mySqlRes = mysql_use_result( mySqlHndl );
 
-//	Convert row char* field into long value
-	const char* rowField = mySqlRow[0];
-	unsigned long retVal = strtol( rowField, NULL, 10 );
-	mysql_free_result( mySqlRes );
-	
-	return retVal;
+//  Getting row
+    MYSQL_ROW mySqlRow;
+    mySqlRow = mysql_fetch_row( mySqlRes );
+
+//  Convert row char* field into long value
+    const char* rowField = mySqlRow[0];
+    unsigned long retVal = strtol( rowField, NULL, 10 );
+    mysql_free_result( mySqlRes );
+    
+    return retVal;
 }
 
 int linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS** sqlRows, unsigned long* rowCount, unsigned int collOnQry, const char* sqlQry ){
@@ -88,7 +88,7 @@ int linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS** sqlRows, unsigned long* rowCount
     mySqlRes = mysql_store_result( mySqlHndl );  
     if( !mySqlRes )
         return MYSQL_STORE_ERROR;
-	
+
 //  Getting row
     MYSQL_ROW mySqlRow;	
     
@@ -102,43 +102,43 @@ int linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS** sqlRows, unsigned long* rowCount
     for( i = 0; ( mySqlRow = mysql_fetch_row( mySqlRes )) != NULL; i++){
 
 //      Reallocation of matrix array [][]
-		tempRows = realloc( tempRows, sizeof( tempRows ) * ( i + 1 ));
-		if( !tempRows ) {
-		    printf( "Unable to allocate space. tempRows = realloc() error in linCCgetRow()\n" );
-		    exit( 1 );
-		}
-		    
+        tempRows = realloc( tempRows, sizeof( tempRows ) * ( i + 1 ));
+        if( !tempRows ) {
+            printf( "Unable to allocate space. tempRows = realloc() error in linCCgetRow()\n" );
+            exit( 1 );
+        }
+
         tempRows[i] = malloc( sizeof( tempRows ) * ( collOnQry ));
         if( !tempRows[i] ) {
-		    printf( "Unable to allocate space. tempRows[] = malloc() error in linCCgetRow()\n" );
-		    exit( 1 );
-		}
+            printf( "Unable to allocate space. tempRows[] = malloc() error in linCCgetRow()\n" );
+            exit( 1 );
+        }
         
 //      Getting string length for re-allocate space
         for( int pi = 0; pi < collOnQry; pi++ ) {
 //          Temp allocation of string data + 1 ( null char )
             tempRows[i][pi] = malloc( strlen( mySqlRow[pi] ) + 1 );
             if( !tempRows[i][pi] ) {
-		        printf( "Unable to allocate space. tempRows[][] = malloc() error in linCCgetRow()\n" );
-		        exit( 1 );
-		    }
-		    
+                printf( "Unable to allocate space. tempRows[][] = malloc() error in linCCgetRow()\n" );
+                exit( 1 );
+            }
+
             strcpy( ( char *)tempRows[i][pi], mySqlRow[pi] );
         }
-	}
-		
+    }
+
     *sqlRows = tempRows;
-	*rowCount = i;	
+    *rowCount = i;	
     mysql_free_result( mySqlRes );
     
     if ( i == 0 )
-		return MYSQL_NO_ROW;
-		
+        return MYSQL_NO_ROW;
+
     return 0;
 }
 
 void linCCRowsFree( DATA_ROWS* sqlRows, unsigned long* rowCount, unsigned int* collCount ){
-	
+
 //  I want to break free!!
     for( int i = 0; i < *rowCount; i++ ) {
         for( int coll = 0; coll < *collCount; coll++ )
@@ -150,5 +150,5 @@ void linCCRowsFree( DATA_ROWS* sqlRows, unsigned long* rowCount, unsigned int* c
 
 int linCCWriteRow( MYSQL* mySqlHndl, const char* sqlQry ){
 //  SQL query
-    return mysql_query( mySqlHndl, sqlQry );	
+    return mysql_query( mySqlHndl, sqlQry );
 }
