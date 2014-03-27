@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include "threads.h"
 #include <signal.h>
+#include "libLog.h"
 
 TAG_VAR* VarTags;
 PLCData* addressPacked;
@@ -21,7 +22,7 @@ void exitMsg( int signNo ){
 }
 
 int main(void) {
-        
+            
     unsigned long rowCount;
     unsigned int packCount;
     printf( "Packing address...\n" );

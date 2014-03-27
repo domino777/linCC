@@ -25,3 +25,23 @@
  */
 
 #include "libLog.h"
+
+void logMsg( const char* textLog ) {
+    
+    FILE* logFile;
+    
+    logFile = fopen( "linCC.log", "a+" );
+    if( !logFile ) {
+        printf( "Log file access error - Unable to create or modify the log file \n" );
+        return; 
+    }
+    time_t actTime = time( NULL );
+    
+    char* asciTime;
+    asciTime = asctime( localtime( &actTime ) );
+    
+    asciTime[ strlen( asciTime ) - 1 ] = '\0';
+    
+    fprintf( logFile, "[ %s ] -- %s\n", asciTime, textLog );
+    fclose( logFile );
+}

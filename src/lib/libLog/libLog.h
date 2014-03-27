@@ -28,6 +28,9 @@
 #define _libLog_h_
 
 #include <stdio.h>
+#include <time.h>
+#include <string.h>
 
+void logMsg( const char* textLog );
 
 #endif  // _libLog_h_
