@@ -26,22 +26,19 @@
 
 #include "libLog.h"
 
-void logMsg( const char* textLog ) {
+void logMsg( int priority, const char* text, ... ) {
     
-    FILE* logFile;
+    openlog( "linCC", LOG_USER, 0 );
     
-    logFile = fopen( "linCC.log", "a+" );
-    if( !logFile ) {
-        printf( "Log file access error - Unable to create or modify the log file \n" );
-        return; 
-    }
-    time_t actTime = time( NULL );
+    va_list argList;
     
-    char* asciTime;
-    asciTime = asctime( localtime( &actTime ) );
+    va_start( argList, text );
+    vsyslog( ( LOG_USER | priority ), text, argList );
+    va_end( argList );
+    closelog();
     
-    asciTime[ strlen( asciTime ) - 1 ] = '\0';
+    va_start( argList, text );
+    vprintf( text, argList );
+    va_end( argList );
     
-    fprintf( logFile, "[ %s ] -- %s\n", asciTime, textLog );
-    fclose( logFile );
 }

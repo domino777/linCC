@@ -28,9 +28,9 @@
 #define _libLog_h_
 
 #include <stdio.h>
-#include <time.h>
-#include <string.h>
+#include <stdarg.h>
+#include <syslog.h>
 
-void logMsg( const char* textLog );
+void logMsg( int priority, const char* text, ... );
 
 #endif  // _libLog_h_

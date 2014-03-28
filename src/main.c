@@ -11,44 +11,48 @@
 #include <signal.h>
 #include "libLog.h"
 
+
 TAG_VAR* VarTags;
 PLCData* addressPacked;
 
 
 void exitMsg( int signNo ){
-    printf("\n\n----------------------------- \n ");
-    printf("\n\nlinCC now exit. Goodbye ;) \n ");
+    printf( "\n\n-----------------------------\n" );
+    printf( "\n\nlinCC now exit. Goodbye ;)\n" );
     exit(0);
 }
 
 int main(void) {
-            
+
     unsigned long rowCount;
     unsigned int packCount;
-    printf( "Packing address...\n" );
+
+    signal( SIGINT, exitMsg );
+    
+    logMsg( LOG_INFO, "Packing address...\n" );
     getPack( &packCount );
-    printf( "Package count: %d\n", packCount );
+    logMsg( LOG_INFO,  "Package count: %d\n", packCount );
     for( int i = 0; i < packCount; i++)
-        printf( "DB: %d : StrtByte: %d : Length: %d\n", addressPacked[i].db, addressPacked[i].startByte, addressPacked[i].dataLength );
+        logMsg( LOG_INFO, "DB: %d : StrtByte: %d : Length: %d\n", addressPacked[i].db, addressPacked[i].startByte, addressPacked[i].dataLength );
     
     
-    printf( "Reading tags dabase... \n" );
+    logMsg( LOG_INFO, "Reading tags dabase... \n" );
     if( loadTags( &rowCount ) ) {
-        printf( "Impossibile leggere lista tag da DB" );
+        logMsg( LOG_INFO, "Impossibile leggere lista tag da DB" );
         exit(1);
     }
     
-    printf( "Number of tags: %d\n", rowCount );
+    logMsg( LOG_INFO, "Number of tags: %d\n", rowCount );
    
-    printf( "Reading database of PLC connections...\n" );
+    logMsg( LOG_INFO, "Reading database of PLC connections...\n" );
    	PLC_CONN_INFO* plcInfo;
    	plcInfo = linCCPLCgetInfo();
    	
-   	printf( "PLC Connection info:\n" );
-   	printf( "PLC IP ADDRESS   : %s\n", plcInfo->ip );
-   	printf( "PLC RACK         : %d\n", plcInfo->rack );
-   	printf( "PLC SLOT         : %d\n", plcInfo->slot );
-   	printf( "Try to connect to PLC...\n" );
+   	logMsg( LOG_INFO, "PLC Connection info:\n" );
+   	logMsg( LOG_INFO, "PLC IP ADDRESS   : %s\n", plcInfo->ip );
+   	logMsg( LOG_INFO, "PLC RACK         : %d\n", plcInfo->rack );
+   	logMsg( LOG_INFO, "PLC SLOT         : %d\n", plcInfo->slot );
+   	logMsg( LOG_INFO, "Try to connect to PLC...\n" );
    	
    	S7Object client;
     if( PLCConnect( &client, plcInfo->ip , &plcInfo->rack, &plcInfo->slot )) {
@@ -57,7 +61,7 @@ int main(void) {
     }
     free( plcInfo );
     int qryCount = 0;
-    printf( "Comunication started...\n" );
+    logMsg( LOG_INFO, "Comunication started...\n" );
     
     PLCThread plcData;
     plcData.packCount = &packCount;
@@ -68,20 +72,16 @@ int main(void) {
     threadPLCRead( &thread, &plcData );
     unsigned long tagUpdateCount;
     
-
-
-    signal( SIGINT, exitMsg );
-    
     while( 1 ) {
         sleep(1);
         U_TAG_VAR* tagUpdate;
         
         varTagGetValues( VarTags, &tagUpdate, addressPacked, &rowCount, &tagUpdateCount, &packCount );
-        printf("TAG update count: %d\n", tagUpdateCount);
+        logMsg( LOG_INFO, "TAG update count: %d\n", tagUpdateCount);
         writeTag( tagUpdate, &tagUpdateCount );
         
         qryCount++;
-        printf("\rCounter : %d", qryCount );
+        logMsg( LOG_INFO, "\rCounter : %d", qryCount );
         fflush( stdout );
         free(tagUpdate);
     }
