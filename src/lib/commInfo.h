@@ -35,6 +35,6 @@
 
 #define commTable        "PLCConnections"
 
-PLC_CONN_INFO* linCCPLCgetInfo();
+int linCCPLCgetInfo( PLC_CONN_INFO* connInfo );
 
 #endif // _commInfo_h

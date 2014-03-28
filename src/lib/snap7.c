@@ -35,13 +35,13 @@ const longword errIsoConnect            = 0x00010000; // Connection error
 const longword errIsoDisconnect         = 0x00020000; // Disconnect error
 const longword errIsoInvalidPDU         = 0x00030000; // Bad format
 const longword errIsoInvalidDataSize    = 0x00040000; // Bad Datasize passed to send/recv buffer is invalid
-const longword errIsoNullPointer    	= 0x00050000; // Null passed as pointer
-const longword errIsoShortPacket    	= 0x00060000; // A short packet received
+const longword errIsoNullPointer        = 0x00050000; // Null passed as pointer
+const longword errIsoShortPacket        = 0x00060000; // A short packet received
 const longword errIsoTooManyFragments   = 0x00070000; // Too many packets without EoT flag
-const longword errIsoPduOverflow    	= 0x00080000; // The sum of fragments data exceded maximum packet size
+const longword errIsoPduOverflow        = 0x00080000; // The sum of fragments data exceded maximum packet size
 const longword errIsoSendPacket         = 0x00090000; // An error occurred during send
 const longword errIsoRecvPacket         = 0x000A0000; // An error occurred during recv
-const longword errIsoInvalidParams    	= 0x000B0000; // Invalid TSAP params
+const longword errIsoInvalidParams      = 0x000B0000; // Invalid TSAP params
 const longword errIsoResvd_1            = 0x000C0000; // Unassigned
 const longword errIsoResvd_2            = 0x000D0000; // Unassigned
 const longword errIsoResvd_3            = 0x000E0000; // Unassigned
@@ -50,9 +50,9 @@ const longword errIsoResvd_4            = 0x000F0000; // Unassigned
 //------------------------------------------------------------------------------
 //                                  PARAMS LIST            
 //------------------------------------------------------------------------------
-const int p_u16_LocalPort  	    = 1;
-const int p_u16_RemotePort 	    = 2;
-const int p_i32_PingTimeout	    = 3;
+const int p_u16_LocalPort       = 1;
+const int p_u16_RemotePort      = 2;
+const int p_i32_PingTimeout     = 3;
 const int p_i32_SendTimeout     = 4;
 const int p_i32_RecvTimeout     = 5;
 const int p_i32_WorkInterval    = 6;
@@ -122,12 +122,12 @@ const word CONNTYPE_OP                      = 0x0002;  // Connect to the PLC as 
 const word CONNTYPE_BASIC                   = 0x0003;  // Basic connection
 
 // Area ID
-const byte S7AreaPE   =	0x81;
-const byte S7AreaPA   =	0x82;
-const byte S7AreaMK   =	0x83;
-const byte S7AreaDB   =	0x84;
-const byte S7AreaCT   =	0x1C;
-const byte S7AreaTM   =	0x1D;
+const byte S7AreaPE   =    0x81;
+const byte S7AreaPA   =    0x82;
+const byte S7AreaMK   =    0x83;
+const byte S7AreaDB   =    0x84;
+const byte S7AreaCT   =    0x1C;
+const byte S7AreaTM   =    0x1D;
 
 // Word Length
 const int S7WLBit     = 0x01;
@@ -207,9 +207,9 @@ const longword evcReserved_00002000   = 0x00002000; // actually unused
 const longword evcReserved_00004000   = 0x00004000; // actually unused
 const longword evcReserved_00008000   = 0x00008000; // actually unused
 // S7 Server Event Code
-const longword evcPDUincoming  	      = 0x00010000;
+const longword evcPDUincoming         = 0x00010000;
 const longword evcDataRead            = 0x00020000;
-const longword evcDataWrite    	      = 0x00040000;
+const longword evcDataWrite           = 0x00040000;
 const longword evcNegotiatePDU        = 0x00080000;
 const longword evcReadSZL             = 0x00100000;
 const longword evcClock               = 0x00200000;

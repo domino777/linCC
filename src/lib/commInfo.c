@@ -26,28 +26,31 @@
 
 #include "commInfo.h"
 
-PLC_CONN_INFO* linCCPLCgetInfo( ) {
+int linCCPLCgetInfo( PLC_CONN_INFO* connInfo ) {
 
     MYSQL* sqlHndl;  
 
 //  Create my SQL connection and get row count of vatList table
-     linCCConnect( &sqlHndl );
+    linCCConnect( &sqlHndl );
+    
     unsigned long rowCount;
     DATA_ROWS* connList;
+    
     linCCgetRows( sqlHndl, &connList, &rowCount, 4, "SELECT id, PLCRack, PLCSlot, PLCIp FROM PLCConnections" );
     if ( !connList )
-        exit( 5 );
-    
-    PLC_CONN_INFO* plcInfo = malloc( sizeof( PLC_CONN_INFO ));
-    
+        return 1;
+        
 //  Convert id char* field into unsigned int value
-    plcInfo->id   = ( unsigned int )strtol(( const char *)connList[0][0], NULL, 10 );
-    plcInfo->rack = ( unsigned int )strtol(( const char *)connList[0][1], NULL, 10 );
-    plcInfo->slot = ( unsigned int )strtol(( const char *)connList[0][2], NULL, 10 );
-    strcpy( plcInfo->ip, ( const char *)connList[0][3] );
+    connInfo->id   = ( unsigned int )strtol(( const char *)connList[0][0], NULL, 10 );
+//  Convert PLCRack char* field into unsigned int value
+    connInfo->rack = ( unsigned int )strtol(( const char *)connList[0][1], NULL, 10 );
+//  Convert PLCSlot char* field into unsigned int value    
+    connInfo->slot = ( unsigned int )strtol(( const char *)connList[0][2], NULL, 10 );
+//  Copy PLCIp char* field into char*
+    strcpy( connInfo->ip, ( const char *)connList[0][3] );
 
-    free( connList ); 
+    linCCRowsFree( connList, &rowCount, 4 );
     linCCDisconnect( sqlHndl );
     
-    return plcInfo;
+    return 0;
 }

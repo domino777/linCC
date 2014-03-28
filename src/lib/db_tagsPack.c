@@ -108,7 +108,7 @@ int getPack ( unsigned int* packLength ) {
         lastByte = tempBYTE;
     }
     
-    linCCRowsFree( tagsList, ( unsigned long *)packLength, &collCount );
+    linCCRowsFree( tagsList, ( unsigned long *)packLength, collCount );
     linCCDisconnect( sqlHndl );	
     
 //   Save the bumer of address

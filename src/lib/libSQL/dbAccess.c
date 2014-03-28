@@ -48,7 +48,7 @@ void linCCDisconnect( MYSQL* mySqlHndl ){
 }
 
 
-unsigned long linCCRowCount( MYSQL* mySqlHndl, char* tableName ){
+unsigned long linCCRowCount( MYSQL* mySqlHndl, const char* tableName ){
 
 //  SQL query for return table row count
     char qryStr[256] = "SELECT COUNT(*) FROM ";
@@ -137,11 +137,11 @@ int linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS** sqlRows, unsigned long* rowCount
     return 0;
 }
 
-void linCCRowsFree( DATA_ROWS* sqlRows, unsigned long* rowCount, unsigned int* collCount ){
+void linCCRowsFree( DATA_ROWS* sqlRows, unsigned long* rowCount, unsigned int collCount ){
 
 //  I want to break free!!
     for( int i = 0; i < *rowCount; i++ ) {
-        for( int coll = 0; coll < *collCount; coll++ )
+        for( int coll = 0; coll < collCount; coll++ )
             free( sqlRows[i][coll] );
         free( sqlRows[i] );
     }   

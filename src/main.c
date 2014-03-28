@@ -45,21 +45,20 @@ int main(void) {
     logMsg( LOG_INFO, "Number of tags: %d\n", rowCount );
    
     logMsg( LOG_INFO, "Reading database of PLC connections...\n" );
-   	PLC_CONN_INFO* plcInfo;
-   	plcInfo = linCCPLCgetInfo();
+   	PLC_CONN_INFO plcInfo;
+   	linCCPLCgetInfo( &plcInfo );
    	
    	logMsg( LOG_INFO, "PLC Connection info:\n" );
-   	logMsg( LOG_INFO, "PLC IP ADDRESS   : %s\n", plcInfo->ip );
-   	logMsg( LOG_INFO, "PLC RACK         : %d\n", plcInfo->rack );
-   	logMsg( LOG_INFO, "PLC SLOT         : %d\n", plcInfo->slot );
+   	logMsg( LOG_INFO, "PLC IP ADDRESS   : %s\n", plcInfo.ip );
+   	logMsg( LOG_INFO, "PLC RACK         : %d\n", plcInfo.rack );
+   	logMsg( LOG_INFO, "PLC SLOT         : %d\n", plcInfo.slot );
    	logMsg( LOG_INFO, "Try to connect to PLC...\n" );
    	
    	S7Object client;
-    if( PLCConnect( &client, plcInfo->ip , &plcInfo->rack, &plcInfo->slot )) {
-        free( plcInfo );
+    if( PLCConnect( &client, plcInfo.ip , &plcInfo.rack, &plcInfo.slot )) {
         exit(50);
     }
-    free( plcInfo );
+
     int qryCount = 0;
     logMsg( LOG_INFO, "Comunication started...\n" );
     
@@ -70,6 +69,7 @@ int main(void) {
 // Start PLC reading thread
     pthread_t thread;
     threadPLCRead( &thread, &plcData );
+    
     unsigned long tagUpdateCount;
     
     while( 1 ) {

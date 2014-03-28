@@ -77,6 +77,9 @@ int PLCConnect( S7Object* plcClient, const char* plcIp, int* plcRack, int* plcSl
 int PLCDisconnect( S7Object* plcClient );
 
 /**************************************************************************************************************************
+ *
+ * <<<<<    DEPRECATED   >>>>>> <<<<<    DEPRECATED   >>>>>> <<<<<    DEPRECATED   >>>>>> <<<<<    DEPRECATED   >>>>>> <<<<<    DEPRECATED   >>>>>>
+ * 
  * float PLCReadTag( S7Object* plcClient, unsigned int* tagDB, unsigned long* tagByte, unsigned char* tagBit, unsigned char* varType )
  * 
  * Read a variable form PLC's DB by given parameter and return the value read
@@ -90,11 +93,13 @@ int PLCDisconnect( S7Object* plcClient );
  * 
  * if there are no issues a valid value is returned, if an error occurs a 0xFFFFFFFF ( #NAN ) value is returned
  * 
+ * <<<<<    DEPRECATED   >>>>>> <<<<<    DEPRECATED   >>>>>> <<<<<    DEPRECATED   >>>>>> <<<<<    DEPRECATED   >>>>>> <<<<<    DEPRECATED   >>>>>>
+ * 
  *************************************************************************************************************************/ 
 float PLCReadTag( S7Object* plcClient, unsigned int* tagDB, unsigned long* tagByte, unsigned char* tagBit, unsigned char* varType );
 
 /**************************************************************************************************************************
- * int PLCReadTags( S7Object* plcClient, unsigned int* tagDB, unsigned int* startByte, unsigned int* dataLength, unsigned char* data)
+ * int PLCReadTags( S7Object* plcClient, unsigned int* tagDB, unsigned long* startByte, unsigned long* dataLength, unsigned char* data)
  * 
  * Read a variable form PLC's DB by given parameter and return the value read
  * 
@@ -107,6 +112,6 @@ float PLCReadTag( S7Object* plcClient, unsigned int* tagDB, unsigned long* tagBy
  * if there are no issues 0 is returned.
  * 
  *************************************************************************************************************************/ 
-int PLCReadTags( S7Object* plcClient, unsigned int* tagDB, unsigned int* startByte, unsigned int* dataLength, unsigned char* data);
+int PLCReadTags( S7Object* plcClient, unsigned int* tagDB, unsigned long* startByte, unsigned long* dataLength, unsigned char* data);
 
 #endif // _libPLC_h

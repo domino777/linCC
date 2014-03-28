@@ -40,8 +40,8 @@ float PLCReadTag( S7Object* plcClient, unsigned int* tagDB, unsigned long* tagBy
 
 //  Getting plc's INT or WORD value
     if( *varType == Word || *varType == Int ) {
-		 char dataByte[ _BYTE_2_ ];
-		 
+        char dataByte[ _BYTE_2_ ];
+
 //  Read error detection
          if( Cli_DBRead( *plcClient, *tagDB, *tagByte, _BYTE_2_ , &dataByte ))
              return PLC_DB_READ_ERROR;
@@ -52,7 +52,7 @@ float PLCReadTag( S7Object* plcClient, unsigned int* tagDB, unsigned long* tagBy
     
     else if( *varType == Real ) {
          char dataByte[ _BYTE_4_ ];
-		 
+
 //  Read error detection
          if( Cli_DBRead( *plcClient, *tagDB, *tagByte, _BYTE_4_ , &dataByte ))
              return PLC_DB_READ_ERROR;
@@ -67,22 +67,22 @@ float PLCReadTag( S7Object* plcClient, unsigned int* tagDB, unsigned long* tagBy
     }
     
     else if( *varType == Bool ) {
-		char dataByte;
-		
-		//  Read error detection
+        char dataByte;
+
+        //  Read error detection
          if( Cli_DBRead( *plcClient, *tagDB, *tagByte, _BYTE_1_ , &dataByte ))
              return PLC_DB_READ_ERROR;
-             
+
          if ( dataByte & ( 0x0001 << *tagBit ) )
              return 1.0;
-             
+
          return 0.0;
      }
      
      return 0xFFFFFFFF;
 }
 
-int PLCReadTags( S7Object* plcClient, unsigned int* tagDB, unsigned int* startByte, unsigned int* dataLength, unsigned char* data) {
+int PLCReadTags( S7Object* plcClient, unsigned int* tagDB, unsigned long* startByte, unsigned long* dataLength, unsigned char* data) {
 
 //  Read data into PLC and read error detection
     if( Cli_AsDBRead( *plcClient, *tagDB, *startByte, *dataLength, data ))

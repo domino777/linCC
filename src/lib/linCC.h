@@ -29,39 +29,39 @@
 
 #include "snap7.h"
 
-typedef struct{
-    unsigned int id;
-    float tagValue;
+typedef struct {
+    unsigned int    id;
+    float           tagValue;
 } U_TAG_VAR;
 
-typedef struct{
-    unsigned int id;
-    unsigned char type;
-    unsigned int accessType;
-    unsigned int db;
-    unsigned long address;
-    unsigned char addressBit;
-    float tagValue;
+typedef struct {
+    unsigned int    id;
+    unsigned char   type;
+    unsigned int    accessType;
+    unsigned int    db;
+    unsigned long   address;
+    unsigned char   addressBit;
+    float           tagValue;
 } TAG_VAR;
 
 typedef struct {
-    unsigned int db;
-    unsigned int startByte;
-    unsigned int dataLength;
-    unsigned char* data;
+    unsigned int    db;
+    unsigned long   startByte;
+    unsigned long   dataLength;
+    unsigned char*  data;
 } PLCData;
 
-typedef struct{
-    unsigned int id;
-    unsigned int rack;
-    unsigned int slot;
-    unsigned int port;
-    char ip[16];
+typedef struct {
+    unsigned int    id;
+    unsigned int    rack;
+    unsigned int    slot;
+    unsigned int    port;
+    char            ip[16];
 } PLC_CONN_INFO;
 
 typedef struct {
-    unsigned int* packCount;
-    S7Object* client;
+    unsigned int*   packCount;
+    S7Object*       client;
 } PLCThread;
 
 enum variableType { noType, Bool, Byte, Word, Int, DWord, DInt, Real };
