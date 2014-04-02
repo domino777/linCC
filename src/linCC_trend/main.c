@@ -4,6 +4,7 @@
 #include <signal.h>
 #include "linCC.h"
 #include "libLog.h"
+#include "getTrend.h"
 
 void exitMsg( int signNo ){
     printf( "\n\n-----------------------------\n" );
@@ -12,8 +13,15 @@ void exitMsg( int signNo ){
 }
 
 int main(void) {
-
-
+    
+    TREND* trendList;
+    unsigned long trendCount;
+    getTrends( &trendList, &trendCount );
+    
+    for( int i = 0; i < trendCount; i ++ ){
+        printf( "TREND :  %d\n", trendList[i].trendNo );
+        storeTrend( ( unsigned int *)&trendList[i].trendNo );
+    }
 }
 
  

@@ -27,4 +27,9 @@
 #ifndef _linCC_h_
 #define _linCC_h_
 
+typedef struct {
+    unsigned int    id;
+    unsigned int    trendNo;
+} TREND;
+
 #endif  // _linCC_h_
