@@ -89,7 +89,7 @@ int PLCReadTags( S7Object* plcClient, unsigned int* tagDB, unsigned long* startB
         return PLC_DB_READ_ERROR;
     
     int retVal;    
-    if( ( retVal = Cli_WaitAsCompletion( *plcClient, 1000) ) ){
+    if( ( retVal = Cli_WaitAsCompletion( *plcClient, 1000) ) == 0x02200000 ){
         return retVal;
     }
              

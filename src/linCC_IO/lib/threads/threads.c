@@ -26,14 +26,17 @@
 
 #include "threads.h"
 
+
 // this is a "private function of threads.c"
 void* thPLCLoop( PLCThread* ptpt ) {
     int retVal = 0;
     while( 1 ){
         usleep( 500000 );
         for( int l = 0; l < *(ptpt->packCount); l++ )
-            if( retVal = PLCReadTags( ptpt->client, &addressPacked[l].db, &addressPacked[l].startByte, &addressPacked[l].dataLength, addressPacked[l].data ) )
+            if( retVal = PLCReadTags( ptpt->client, &addressPacked[l].db, &addressPacked[l].startByte, &addressPacked[l].dataLength, addressPacked[l].data ) ){
+                printf( "ERROR CODE ---- ::: %d", retVal );
                 return retVal;
+            }
     }
 }
 
