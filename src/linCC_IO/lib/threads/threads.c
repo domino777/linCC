@@ -28,13 +28,19 @@
 
 // this is a "private function of threads.c"
 void* thPLCLoop( PLCThread* ptpt ) {
-    while(1){
+    int retVal = 0;
+    while( 1 ){
         usleep( 500000 );
         for( int l = 0; l < *(ptpt->packCount); l++ )
-            PLCReadTags( ptpt->client, &addressPacked[l].db, &addressPacked[l].startByte, &addressPacked[l].dataLength, addressPacked[l].data );
+            if( retVal = PLCReadTags( ptpt->client, &addressPacked[l].db, &addressPacked[l].startByte, &addressPacked[l].dataLength, addressPacked[l].data ) )
+                return retVal;
     }
 }
 
 int threadPLCRead( pthread_t* thread, PLCThread* threadData ) {
     return pthread_create( thread, NULL, thPLCLoop, threadData );
+}
+
+int threadCheck( pthread_t* thread ) {
+    return pthread_kill( *thread, 0 );
 }

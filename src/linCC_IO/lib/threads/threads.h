@@ -28,6 +28,7 @@
 #define _threads_h_
 
 #include <pthread.h>
+#include <signal.h>
 #include "libPLC.h"
 #include "linCC.h"
 
@@ -35,5 +36,6 @@ extern PLCData* addressPacked;
 
 int threadPLCRead( pthread_t* thread, PLCThread* threadData );
 
+int threadCheck( pthread_t* thread );
 
 #endif  // _threads_h_

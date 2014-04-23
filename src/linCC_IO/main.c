@@ -55,8 +55,9 @@ int main(void) {
    	logMsg( LOG_INFO, "Try to connect to PLC...\n" );
    	
    	S7Object client;
-    if( PLCConnect( &client, plcInfo.ip , &plcInfo.rack, &plcInfo.slot )) {
-        exit(50);
+    while( PLCConnect( &client, plcInfo.ip , &plcInfo.rack, &plcInfo.slot )) {
+        logMsg( LOG_INFO, "linCC is unable to connect to the PLC... retry\n" );
+        sleep( 1 );
     }
 
     int qryCount = 0;
@@ -71,9 +72,23 @@ int main(void) {
     threadPLCRead( &thread, &plcData );
     
     unsigned long tagUpdateCount;
-    
+     
     while( 1 ) {
-        sleep(1);
+        sleep( 1 );
+
+// Check if PLC reading thread is still running
+        if( threadCheck( &thread ) ) {
+            logMsg( LOG_INFO, "PLC reading process exited, try to reconnect to PLC\n" );
+            PLCDisconnect( &client );
+            while( PLCConnect( &client, plcInfo.ip , &plcInfo.rack, &plcInfo.slot )) {
+                logMsg( LOG_INFO, "linCC is unable to connect to the PLC... retry\n" );
+                sleep( 1 );
+            }
+            logMsg( LOG_INFO, "PLC connected, try to star reading thread process\n" );
+            threadPLCRead( &thread, &plcData );
+            continue;
+        }
+        
         U_TAG_VAR* tagUpdate;
         
         varTagGetValues( VarTags, &tagUpdate, addressPacked, &rowCount, &tagUpdateCount, &packCount );
