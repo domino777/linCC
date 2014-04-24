@@ -1,5 +1,5 @@
 /*  
- *  linCC.h
+ *  getTriggers.h
  *
  *  "Copyright 2014 Mauro Ghedin"
  *
@@ -24,23 +24,14 @@
  *
  */
 
-#ifndef _linCC_h_
-#define _linCC_h_
+#ifndef _getTriggers_h_
+#define _getTriggers_h_
 
-typedef struct {
-    unsigned int    id;
-    unsigned int    trendNo;
-    unsigned int    timeId;
-} TREND;
+#include "linCC.h"
+#include "libLog.h"
+#include "error.h"
+#include "dbAccess.h"
 
-typedef struct {
-    unsigned int    id;
-    unsigned long   timeBase;   //  Time base is calculated by multiply time value with time base value got from linCC table
-} TRIGGER_TIME;
+int getTriggers( TRIGGER_TIME** trgTime, unsigned long* trgTimeCount );
 
-typedef struct {
-    unsigned int    id;
-    unsigned int    trendNo;
-} TREND_TRIGGER_TIME;
-
-#endif  // _linCC_h_
+#endif  // _getTriggers_h_

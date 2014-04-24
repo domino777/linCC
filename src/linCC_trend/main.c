@@ -5,6 +5,7 @@
 #include "linCC.h"
 #include "libLog.h"
 #include "getTrend.h"
+#include "getTriggers.h"
 
 void exitMsg( int signNo ){
     printf( "\n\n-----------------------------\n" );

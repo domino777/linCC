@@ -26,6 +26,8 @@
 
 #include "getTrend.h"
 
+#define MYSQL_QRY_GET_TREND "SELECT id, trendId, trendSmplTime FROM varTrend ORDER BY trendSmplTime ASC"
+
 int getTrends( TREND** trendList, unsigned long* trendCount ) {
     
     int retVal = 0;
@@ -37,7 +39,7 @@ int getTrends( TREND** trendList, unsigned long* trendCount ) {
     if( retVal = linCCConnect( &sqlHndl ) )
         return retVal;
         
-    if( retVal = linCCgetRows( sqlHndl, &trendRows, trendCount, columnQry, "SELECT id, trendId FROM varTrend" ) )
+    if( retVal = linCCgetRows( sqlHndl, &trendRows, trendCount, columnQry, MYSQL_QRY_GET_TREND ) )
         return retVal;
 
     *trendList = malloc( sizeof( TREND ) * *trendCount );
@@ -45,12 +47,14 @@ int getTrends( TREND** trendList, unsigned long* trendCount ) {
         logMsg( LOG_INFO, "Unable to allocate space for *trendList in getTrends\n" );
         exit( 1 );
     }
-    printf( "HI dear\n" );
+
     for( unsigned long i = 0; i < *trendCount; i++ ) {
 //  Convert id char* field into unsigned int value
-        ( *trendList )[i].id       = ( unsigned int )strtol(( const char *)trendRows[i][0], NULL, 10 );
+        ( *trendList )[i].id        = ( unsigned int )strtol(( const char *)trendRows[i][0], NULL, 10 );
 //  Convert type char* field into unsigned int value
         ( *trendList )[i].trendNo   = ( unsigned int )strtol(( const char *)trendRows[i][1], NULL, 10 );
+//  Convert trendSmplTime filed into unsigned long value
+        ( *trendList )[i].timeId    = ( unsigned int )strtol(( const char *)trendRows[i][2], NULL, 10 );
     }
 
     linCCRowsFree( trendRows, trendCount, columnQry ); 

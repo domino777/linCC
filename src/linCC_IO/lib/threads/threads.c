@@ -33,10 +33,8 @@ void* thPLCLoop( PLCThread* ptpt ) {
     while( 1 ){
         usleep( 500000 );
         for( int l = 0; l < *(ptpt->packCount); l++ )
-            if( retVal = PLCReadTags( ptpt->client, &addressPacked[l].db, &addressPacked[l].startByte, &addressPacked[l].dataLength, addressPacked[l].data ) ){
-                printf( "ERROR CODE ---- ::: %d", retVal );
+            if( retVal = PLCReadTags( ptpt->client, &addressPacked[l].db, &addressPacked[l].startByte, &addressPacked[l].dataLength, addressPacked[l].data ) )
                 return retVal;
-            }
     }
 }
 

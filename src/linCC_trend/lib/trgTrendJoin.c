@@ -1,5 +1,5 @@
 /*  
- *  linCC.h
+ *  trgTrendJoin.c
  *
  *  "Copyright 2014 Mauro Ghedin"
  *
@@ -24,23 +24,4 @@
  *
  */
 
-#ifndef _linCC_h_
-#define _linCC_h_
-
-typedef struct {
-    unsigned int    id;
-    unsigned int    trendNo;
-    unsigned int    timeId;
-} TREND;
-
-typedef struct {
-    unsigned int    id;
-    unsigned long   timeBase;   //  Time base is calculated by multiply time value with time base value got from linCC table
-} TRIGGER_TIME;
-
-typedef struct {
-    unsigned int    id;
-    unsigned int    trendNo;
-} TREND_TRIGGER_TIME;
-
-#endif  // _linCC_h_
+#include "trgTrendJoin.h"
