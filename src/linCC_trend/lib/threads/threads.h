@@ -1,5 +1,5 @@
 /*  
- *  getTriggers.h
+ *  threads.h
  *
  *  "Copyright 2014 Mauro Ghedin"
  *
@@ -24,22 +24,16 @@
  *
  */
 
-#ifndef _getTriggers_h_
-#define _getTriggers_h_
+#ifndef _threads_h_
+#define _threads_h_
 
+#include <pthread.h>
+#include <signal.h>
+#include "libPLC.h"
 #include "linCC.h"
-#include "libLog.h"
-#include "error.h"
-#include "dbAccess.h"
 
-/**************************************************************************************************************************
- *
- *     For ERROR codes about exit() function or value returned by the
- *     the functions, refer to linCC wiki or errors.h header in: 
- *     $linCCPATH/errors/
- * 
- *************************************************************************************************************************/ 
- 
-int getTriggers( TRIGGER_TIME** trgTime, unsigned long* trgTimeCount );
+int threadTrgTrnd( pthread_t* thread, TREND_TRIGGER_THREAD* threadData );
 
-#endif  // _getTriggers_h_
+int threadCheck( pthread_t* thread );
+
+#endif  // _threads_h_

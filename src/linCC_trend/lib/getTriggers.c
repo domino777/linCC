@@ -42,7 +42,7 @@ int getTriggers( TRIGGER_TIME** trgTime, unsigned long* trgTimeCount ) {
     if( retVal = linCCgetRows( sqlHndl, &trgRows, trgTimeCount, columnQry, MYSQL_QRY_GET_TRG ) )
         return retVal;
 
-    *trgTime = malloc( sizeof( TREND ) * *trgTimeCount );
+    *trgTime = malloc( sizeof( TRIGGER_TIME ) * *trgTimeCount );
     if( !( *trgTime )) {
         logMsg( LOG_INFO, "Unable to allocate space for *trendList in getTriggers\n" );
         exit( 1 );
@@ -53,7 +53,7 @@ int getTriggers( TRIGGER_TIME** trgTime, unsigned long* trgTimeCount ) {
         ( *trgTime )[i].id        = ( unsigned int )strtol(( const char *)trgRows[i][0], NULL, 10 );
         
 //  Convert  char* field into unsigned int value
-        unsigned int time       =  ( unsigned int )strtol(( const char *)trgRows[i][1], NULL, 10 );
+        unsigned int time       =   ( unsigned int )strtol(( const char *)trgRows[i][1], NULL, 10 );
         unsigned long factor    =  ( unsigned long )strtol(( const char *)trgRows[i][2], NULL, 10 );
 
         if( factor == 2 )

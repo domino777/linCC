@@ -1,5 +1,5 @@
 /*  
- *  trgTrendJoin.h
+ *  threads.c
  *
  *  "Copyright 2014 Mauro Ghedin"
  *
@@ -24,11 +24,24 @@
  *
  */
 
-#ifndef _trgTrendJoin_h_
-#define _trgTrendJoin_h_
+#include "threads.h"
 
-#include "linCC.h"
-#include "libLog.h"
-#include "error.h"
 
-#endif  // _trgTrendJoin_h_
+// this is a "private function of threads.c"
+void* thPLCLoop( TREND_TRIGGER_THREAD* ptpt ) {
+    int retVal = 0;
+    while( 1 ){
+        usleep( 500000 );
+        for( int l = 0; l < *(ptpt->packCount); l++ )
+            if( retVal = PLCReadTags( ptpt->client, &addressPacked[l].db, &addressPacked[l].startByte, &addressPacked[l].dataLength, addressPacked[l].data ) )
+                return retVal;
+    }
+}
+
+int threadPLCRead( pthread_t* thread, TREND_TRIGGER_THREAD* threadData ) {
+    return pthread_create( thread, NULL, thPLCLoop, threadData );
+}
+
+int threadCheck( pthread_t* thread ) {
+    return pthread_kill( *thread, 0 );
+}

@@ -26,7 +26,7 @@
 
 #include "getTrend.h"
 
-#define MYSQL_QRY_GET_TREND "SELECT id, trendId, trendSmplTime FROM varTrend ORDER BY trendSmplTime ASC"
+#define MYSQL_QRY_GET_TREND "SELECT trendId, trendSmplTime FROM varTrend ORDER BY trendSmplTime ASC"
 
 int getTrends( TREND** trendList, unsigned long* trendCount ) {
     
@@ -50,11 +50,11 @@ int getTrends( TREND** trendList, unsigned long* trendCount ) {
 
     for( unsigned long i = 0; i < *trendCount; i++ ) {
 //  Convert id char* field into unsigned int value
-        ( *trendList )[i].id        = ( unsigned int )strtol(( const char *)trendRows[i][0], NULL, 10 );
+    //    ( *trendList )[i].id        = ( unsigned int )strtol(( const char *)trendRows[i][0], NULL, 10 );
 //  Convert type char* field into unsigned int value
-        ( *trendList )[i].trendNo   = ( unsigned int )strtol(( const char *)trendRows[i][1], NULL, 10 );
+        ( *trendList )[i].trendNo   = ( unsigned int )strtol(( const char *)trendRows[i][0], NULL, 10 );
 //  Convert trendSmplTime filed into unsigned long value
-        ( *trendList )[i].timeId    = ( unsigned int )strtol(( const char *)trendRows[i][2], NULL, 10 );
+        ( *trendList )[i].timeId    = ( unsigned int )strtol(( const char *)trendRows[i][1], NULL, 10 );
     }
 
     linCCRowsFree( trendRows, trendCount, columnQry ); 
@@ -77,7 +77,7 @@ int storeTrend( unsigned int* trendNo ) {
         
     retVal = linCCWriteRow( sqlHndl, sqlQry );
         
-    linCCConnect( &sqlHndl );    
+    linCCDisconnect( sqlHndl );    
     
     if( retVal )
         return retVal;

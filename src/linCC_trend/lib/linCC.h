@@ -28,7 +28,6 @@
 #define _linCC_h_
 
 typedef struct {
-    unsigned int    id;
     unsigned int    trendNo;
     unsigned int    timeId;
 } TREND;
@@ -39,8 +38,9 @@ typedef struct {
 } TRIGGER_TIME;
 
 typedef struct {
-    unsigned int    id;
-    unsigned int    trendNo;
-} TREND_TRIGGER_TIME;
+    unsigned int    trgTimeId;
+    unsigned long   timeBase;
+    TREND*          trendNo;
+} TREND_TRIGGER_THREAD;
 
 #endif  // _linCC_h_
