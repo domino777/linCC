@@ -2,10 +2,13 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
+#include <time.h>
 #include "linCC.h"
 #include "libLog.h"
 #include "getTrend.h"
 #include "getTriggers.h"
+
+#define LOOP_TIME_SP 1000000
 
 void exitMsg( int signNo ){
     printf( "\n\n-----------------------------\n" );
@@ -37,9 +40,16 @@ int main(void) {
     printf("Max time: %d\n", maxTime );
     
     unsigned long secondCount = 0;
+    unsigned long timeDly = LOOP_TIME_SP;
+    
+    clock_t startTime, endTime;
+    
     while( 1 ) {
-        sleep( 1 );
-        
+        usleep( timeDly );
+
+// Getting start time for time delay compensation
+        startTime = clock();
+
         secondCount++;
         
         for( unsigned long trgIdx = 0; trgIdx < trgTimeCount; trgIdx++ ) {
@@ -55,11 +65,15 @@ int main(void) {
         
         if( secondCount >= maxTime )
             secondCount = 0;
+
+// Getting end time for time delay compensation
+        endTime = clock();
+
+// Computing next delay time for loop delay compensation
+        timeDly = LOOP_TIME_SP - (( unsigned long ) (endTime - startTime));
+        printf(" TIME ELAPSED: %d -- %d -- %d\n", endTime, startTime, timeDly );
+        
     }
-    //~ for( int i = 0; i < trendCount; i ++ ){
-        //~ printf( "TREND :  %d\n", trendList[i].trendNo );
-        //~ storeTrend( ( unsigned int *)&trendList[i].trendNo );
-    //~ }
 }
 
  
