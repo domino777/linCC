@@ -17,6 +17,9 @@ void exitMsg( int signNo ){
 }
 
 int main(void) {
+
+//  standard buffer output disabled
+    setbuf(stdout, NULL);
     
     TREND* trendList;
     unsigned long trendCount;
