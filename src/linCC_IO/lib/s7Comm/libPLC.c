@@ -94,3 +94,16 @@ int PLCReadTags( S7Object* plcClient, unsigned int* tagDB, unsigned long* startB
              
     return 0;
 }
+
+int PLCWriteTags( S7Object* plcClient, W_TAG_VAR* tagVar, unsigned long* tagVarCount ) {
+
+//  Read data into PLC and read error detection
+    /*if( Cli_AsDBRead( *plcClient, *tagDB, *startByte, *dataLength, data ))
+        return PLC_DB_READ_ERROR;
+    
+    int retVal;    
+    if( ( retVal = Cli_WaitAsCompletion( *plcClient, 1000) ) == 0x02200000 )
+        return retVal;
+             
+    return 0;*/
+}

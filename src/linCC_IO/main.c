@@ -10,6 +10,7 @@
 #include "threads.h"
 #include <signal.h>
 #include "libLog.h"
+#include "db_tagsWrite.h"
 
 
 TAG_VAR* VarTags;
@@ -54,28 +55,39 @@ int main(void) {
    	logMsg( LOG_INFO, "PLC SLOT         : %d\n", plcInfo.slot );
    	logMsg( LOG_INFO, "Try to connect to PLC...\n" );
    	
-   	S7Object client;
+   	/*S7Object client;
     while( PLCConnect( &client, plcInfo.ip , &plcInfo.rack, &plcInfo.slot )) {
         logMsg( LOG_INFO, "linCC is unable to connect to the PLC... retry\n" );
         sleep( 1 );
-    }
+    }*/
 
     int qryCount = 0;
     logMsg( LOG_INFO, "Comunication started...\n" );
-    
+   /* 
     PLCThread plcData;
     plcData.packCount = &packCount;
     plcData.client = &client;
-    
+    */
 // Start PLC reading thread
-    pthread_t thread;
+  /*  pthread_t thread;
     threadPLCRead( &thread, &plcData );
-    
+    */
     unsigned long tagUpdateCount;
-     
+    unsigned long wTagVarCount;
+    
     while( 1 ) {
         sleep( 1 );
-
+        
+        W_TAG_VAR* wTagVar;
+        if( !getTagWrite( &wTagVar, &wTagVarCount ) ) {
+            for( int i = 0; i < wTagVarCount; i++ ) {
+                printf("tag id: %d -- Value %f\n", wTagVar[i].id, wTagVar[i].tagValue );
+            }
+            free( wTagVar );
+        }
+        else
+            printf("no tag\n");
+/*
 // Check if PLC reading thread is still running
         if( threadCheck( &thread ) ) {
             logMsg( LOG_INFO, "PLC reading process exited, try to reconnect to PLC\n" );
@@ -99,6 +111,7 @@ int main(void) {
         logMsg( LOG_INFO, "\rCounter : %d", qryCount );
         fflush( stdout );
         free(tagUpdate);
+        */
     }
 }
 

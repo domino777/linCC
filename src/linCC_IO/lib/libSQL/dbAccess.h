@@ -94,7 +94,7 @@ void linCCDisconnect( MYSQL* mySqlHndl );
  * row count is returned
  * 
  *************************************************************************************************************************/ 
-unsigned long linCCRowCount( MYSQL* mySqlHndl, const char* tableName );
+unsigned long linCCRowCount( MYSQL* mySqlHndl, const char* tableName, const char* whereStatement );
 
 /**************************************************************************************************************************
  * linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS** sqlRows, unsigned long* rowCount, unsigned int collOnQry, const char* sqlQry )

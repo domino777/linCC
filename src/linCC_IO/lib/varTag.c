@@ -32,7 +32,7 @@ int loadTags( unsigned long* rowCount ){
 
 //  Create my SQL connection and get row count of vatList table
     linCCConnect( &sqlHndl );
-    *rowCount = linCCRowCount( sqlHndl, "varList" );
+    *rowCount = linCCRowCount( sqlHndl, "varList", NULL );
     if( *rowCount == 0 )
         return LINCC_NO_TAGS_FOUND;
     

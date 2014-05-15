@@ -1,5 +1,5 @@
 /*  
- *  linCC.h
+ *  db_tagsWrite.h
  *
  *  "Copyright 2014 Mauro Ghedin"
  *
@@ -24,48 +24,13 @@
  *
  */
 
-#ifndef _linCC_h_
-#define _linCC_h_
+#ifndef _db_tagsWrite_h_
+#define _db_tagsWrite_h_
 
-#include "snap7.h"
+#include "dbAccess.h"
+#include "errors.h"
+#include "linCC.h"
 
-typedef struct {
-    unsigned int    id;
-    float           tagValue;
-} U_TAG_VAR;
+int getTagWrite( W_TAG_VAR** wTagVar, unsigned long* wTagVarCount );
 
-typedef struct {
-    unsigned int    id;
-    unsigned char   type;
-    unsigned int    accessType;
-    unsigned int    db;
-    unsigned long   address;
-    unsigned char   addressBit;
-    float           tagValue;
-} TAG_VAR;
-
-typedef TAG_VAR     W_TAG_VAR;
-
-typedef struct {
-    unsigned int    db;
-    unsigned long   startByte;
-    unsigned long   dataLength;
-    unsigned char*  data;
-} PLCData;
-
-typedef struct {
-    unsigned int    id;
-    unsigned int    rack;
-    unsigned int    slot;
-    unsigned int    port;
-    char            ip[16];
-} PLC_CONN_INFO;
-
-typedef struct {
-    unsigned int*   packCount;
-    S7Object*       client;
-} PLCThread;
-
-enum variableType { noType, Bool, Byte, Word, Int, DWord, DInt, Real };
-
-#endif  // _linCC_h_
+#endif  // _db_tagsWrite_h_

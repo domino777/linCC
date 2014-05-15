@@ -114,4 +114,6 @@ float PLCReadTag( S7Object* plcClient, unsigned int* tagDB, unsigned long* tagBy
  *************************************************************************************************************************/ 
 int PLCReadTags( S7Object* plcClient, unsigned int* tagDB, unsigned long* startByte, unsigned long* dataLength, unsigned char* data);
 
+int PLCWriteTags( S7Object* plcClient, W_TAG_VAR* tagVar, unsigned long* tagVarCount );
+
 #endif // _libPLC_h

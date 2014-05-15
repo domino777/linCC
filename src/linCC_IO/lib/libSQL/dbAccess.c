@@ -48,14 +48,16 @@ void linCCDisconnect( MYSQL* mySqlHndl ){
 }
 
 
-unsigned long linCCRowCount( MYSQL* mySqlHndl, const char* tableName ){
+unsigned long linCCRowCount( MYSQL* mySqlHndl, const char* tableName, const char* whereStatement ) {
 
 //  SQL query for return table row count
     char qryStr[256] = "SELECT COUNT(*) FROM ";
-
+    
 //  Concatenating string
-    strcat( qryStr, tableName );
-
+    sprintf( qryStr + strlen( qryStr ), tableName );
+    if( whereStatement != NULL )
+        sprintf( qryStr + strlen( qryStr ), " WHERE %s", whereStatement );
+                    
     const char* qryStrConst = qryStr;
 
 //  Send SQL query to Databases	
@@ -128,7 +130,7 @@ int linCCgetRows( MYSQL* mySqlHndl, DATA_ROWS** sqlRows, unsigned long* rowCount
     }
 
     *sqlRows = tempRows;
-    *rowCount = i;	
+    *rowCount = i;
     mysql_free_result( mySqlRes );
     
     if ( i == 0 )
