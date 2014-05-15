@@ -78,7 +78,23 @@ int getTagWrite( W_TAG_VAR** wTagVar, unsigned long* wTagVarCount ) {
     return 0;
 }
 
-int clrTagWrite( W_TAG_VAR* wTagVar, unsigned long wTagVarCount ) {
- 
- return 0;   
+int clrTagWrite( W_TAG_VAR* wTagVar, unsigned long* wTagVarCount ) {
+    MYSQL* sqlHndl;  
+
+//  Create my SQL connection and get row count of varList table
+    linCCConnect( &sqlHndl );
+    
+    int retVal = 0;
+    char sqlQry[256];
+    sqlQry[0] = NULL;
+    
+    for( unsigned long i = 0; i < *wTagVarCount; i++ ) {
+        sprintf( sqlQry, "UPDATE varList SET wFlag=0 WHERE id=%d", wTagVar[i].id );
+        if( ( retVal = linCCWriteRow( sqlHndl, ( const char* )sqlQry ) ))
+            return retVal;
+    }
+    
+    linCCDisconnect( sqlHndl );
+    
+    return 0;   
 }
