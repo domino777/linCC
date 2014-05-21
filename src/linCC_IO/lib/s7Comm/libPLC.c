@@ -97,6 +97,55 @@ int PLCReadTags( S7Object* plcClient, unsigned int* tagDB, unsigned long* startB
 
 int PLCWriteTags( S7Object* plcClient, W_TAG_VAR* tagVar, unsigned long* tagVarCount ) {
 
+//  Create data buffer to send to PLC
+    PS7DataItem plcItems;
+    
+    plcItems = malloc( sizeof( PS7DataItem ) * *tagVarCount );
+    if( !plcItems ) {
+        printf( "Unable to allocate space. plcItems[] = malloc() error in PLCWriteTags()\n" );
+        exit( GETPACK_REALLOC_EXIT );
+    }
+
+//  Prepare data buffer
+    for( unsigned int i = 0; i < *tagVarCount; i++ ) {
+//      On this version of linCC only DB can be read and write
+        plcItems[i].Area    = 0x84;
+        
+        plcItems[i].Start   = tagVar[i].address;
+        
+        if( tagVar[i].type == Bool ) {
+            plcItems[i].WordLen = 0x01;
+//  Override start address for bit type
+            plcItems[i].Start = ( tagVar[i].address * 8 ) + tagVar[i].addressBit;
+            plcItems[i].Amount = 1;
+        }
+        else if( tagVar[i].type == Byte ) {
+            plcItems[i].WordLen = 0x02;
+            plcItems[i].Amount = 1;
+        }
+        else if( tagVar[i].type == Word || tagVar[i].type == Int ) {
+            plcItems[i].WordLen = 0x04;
+            plcItems[i].Amount = 2;
+        }
+        else if( tagVar[i].type == DWord || tagVar[i].type == DInt ) {
+            plcItems[i].WordLen = 0x06;
+            plcItems[i].Amount = 4;
+        }
+        else if( tagVar[i].type == Real ) {
+            plcItems[i].WordLen = 0x08;
+            plcItems[i].Amount = 4;
+        }
+        
+        plcItems[i].DBNumber = tagVar[i].db;
+    }
+
+//  Send data buffer
+    int retVal = Cli_WriteMultiVars( *plcClient, plcItems, ( int )*tagVarCount );
+    
+//  Freeeeeeeeing data bufferrrrrr
+    free( plcItems );
+    
+    return retVal;
 //  Read data into PLC and read error detection
     /*if( Cli_AsDBRead( *plcClient, *tagDB, *startByte, *dataLength, data ))
         return PLC_DB_READ_ERROR;

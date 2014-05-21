@@ -29,6 +29,7 @@
 
 #include "snap7.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include "errors.h"
 #include "linCC.h"
 
