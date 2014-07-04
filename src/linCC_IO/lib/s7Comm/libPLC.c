@@ -99,8 +99,10 @@ int PLCWriteTags( S7Object* plcClient, W_TAG_VAR* tagVar, unsigned long* tagVarC
 
 //  Create data buffer to send to PLC
     PS7DataItem plcItems;
+    plcItems = NULL;
     
     plcItems = malloc( sizeof( PS7DataItem ) * *tagVarCount );
+    printf( " \n Tag count in plcwrite %d\n", *tagVarCount );
     if( !plcItems ) {
         printf( "Unable to allocate space. plcItems[] = malloc() error in PLCWriteTags()\n" );
         exit( GETPACK_REALLOC_EXIT );
@@ -133,7 +135,18 @@ int PLCWriteTags( S7Object* plcClient, W_TAG_VAR* tagVar, unsigned long* tagVarC
         }
         else if( tagVar[i].type == Real ) {
             plcItems[i].WordLen = 0x08;
-            plcItems[i].Amount = 4;
+            plcItems[i].Amount = 1;
+            
+            unsigned char *data;
+            data = malloc( 4 );
+            
+            data[0] = *((unsigned char*)(&( tagVar[i].tagValue) ) + 3);
+            data[1] = *((unsigned char*)(&( tagVar[i].tagValue) ) + 2);
+            data[2] = *((unsigned char*)(&( tagVar[i].tagValue) ) + 1);
+            data[3] = *((unsigned char*)(&( tagVar[i].tagValue) ) + 0);
+           
+            plcItems[i].pdata = data;
+            
         }
         
         plcItems[i].DBNumber = tagVar[i].db;
@@ -142,8 +155,12 @@ int PLCWriteTags( S7Object* plcClient, W_TAG_VAR* tagVar, unsigned long* tagVarC
 //  Send data buffer
     int retVal = Cli_WriteMultiVars( *plcClient, plcItems, ( int )*tagVarCount );
     
+        printf( "written\n");
 //  Freeeeeeeeing data bufferrrrrr
+    free( tagVar );
+    free( plcItems[0].pdata );
     free( plcItems );
+printf( "written\n");
     
     return retVal;
 //  Read data into PLC and read error detection

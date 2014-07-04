@@ -72,7 +72,8 @@ int getTagWrite( W_TAG_VAR** wTagVar, unsigned long* wTagVarCount ) {
     else
         return 1;
     
-    free( tagsList ); 
+    linCCRowsFree( tagsList, wTagVarCount, collCount );
+    //free( tagsList );  
     linCCDisconnect( sqlHndl );
     
     return 0;
