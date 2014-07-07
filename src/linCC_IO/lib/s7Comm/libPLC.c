@@ -114,37 +114,58 @@ int PLCWriteTags( S7Object* plcClient, W_TAG_VAR* tagVar, unsigned long* tagVarC
         plcItems[i].Area    = 0x84;
         
         plcItems[i].Start   = tagVar[i].address;
+        plcItems[i].Amount = 1;
+        
+        unsigned char *data;
         
         if( tagVar[i].type == Bool ) {
             plcItems[i].WordLen = 0x01;
 //  Override start address for bit type
             plcItems[i].Start = ( tagVar[i].address * 8 ) + tagVar[i].addressBit;
-            plcItems[i].Amount = 1;
         }
+//  Byte swap and assign for Byte type  
         else if( tagVar[i].type == Byte ) {
             plcItems[i].WordLen = 0x02;
-            plcItems[i].Amount = 1;
+            
+            data = malloc( 1 );
+            unsigned char val = ( unsigned char )( tagVar[i].tagValue );
+            data[0] = ( unsigned char )val;
+            plcItems[i].pdata = ( void *)data;
+            
         }
+//  Byte swap and assign for Word and Int type            
         else if( tagVar[i].type == Word || tagVar[i].type == Int ) {
             plcItems[i].WordLen = 0x04;
-            plcItems[i].Amount = 1;
+            
+            data = malloc( 2 );
+            short int val = ( short int )( tagVar[i].tagValue );
+            data[0] = *((unsigned char*)(&( val ) ) + 1);
+            data[1] = *((unsigned char*)(&( val ) ) + 0);
+
+            plcItems[i].pdata = ( void *)data;
         }
+//  Byte swap and assign for DWord and DInt type            
         else if( tagVar[i].type == DWord || tagVar[i].type == DInt ) {
             plcItems[i].WordLen = 0x06;
-            plcItems[i].Amount = 1;
+
+            data = malloc( 4 );
+            long val = ( long )( tagVar[i].tagValue );
+            data[0] = *((unsigned char*)(&( val ) ) + 3);
+            data[1] = *((unsigned char*)(&( val ) ) + 2);
+            data[2] = *((unsigned char*)(&( val ) ) + 1);
+            data[3] = *((unsigned char*)(&( val ) ) + 0);
+            plcItems[i].pdata = ( void *)data;
+            
         }
+//  Byte swap and assign for Real type            
         else if( tagVar[i].type == Real ) {
             plcItems[i].WordLen = 0x08;
-            plcItems[i].Amount = 1;
-                        
-            unsigned char *data;
-            data = malloc( 4 );
             
+            data = malloc( 4 );
             data[0] = *((unsigned char*)(&( tagVar[i].tagValue) ) + 3);
             data[1] = *((unsigned char*)(&( tagVar[i].tagValue) ) + 2);
             data[2] = *((unsigned char*)(&( tagVar[i].tagValue) ) + 1);
             data[3] = *((unsigned char*)(&( tagVar[i].tagValue) ) + 0);
-           
             plcItems[i].pdata = ( void *)data;
             
         }

@@ -51,6 +51,8 @@ int getTagWrite( W_TAG_VAR** wTagVar, unsigned long* wTagVarCount ) {
     
     printf( "tag wFlag : %d\n", *wTagVarCount );
     
+    retVal = 0;
+    
     if( *wTagVarCount > 0 ) {
         tempwTagVar = malloc( sizeof( W_TAG_VAR ) * *wTagVarCount );
         if( !tempwTagVar ) {
@@ -66,17 +68,16 @@ int getTagWrite( W_TAG_VAR** wTagVar, unsigned long* wTagVarCount ) {
             tempwTagVar[i].addressBit   = ( unsigned char )strtol(( const char *)tagsList[i][4], NULL, 10 );
             tempwTagVar[i].tagValue     = ( float )strtof(( const char *)tagsList[i][5], NULL );
         }
-        
-        *wTagVar = tempwTagVar;
     }
     else
-        return 1;
+        retVal = 1;
     
+    *wTagVar = tempwTagVar;
     linCCRowsFree( tagsList, wTagVarCount, collCount );
     //free( tagsList );  
     linCCDisconnect( sqlHndl );
     
-    return 0;
+    return retVal;
 }
 
 int clrTagWrite( W_TAG_VAR* wTagVar, unsigned long* wTagVarCount ) {

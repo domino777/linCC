@@ -79,7 +79,7 @@ int main(void) {
     while( 1 ) {
         sleep( 1 );
         
-        W_TAG_VAR* wTagVar;
+      /*  W_TAG_VAR* wTagVar;
         
         if( !getTagWrite( &wTagVar, &wTagVarCount ) ) {
             for( int i = 0; i < wTagVarCount; i++ ) {
@@ -90,7 +90,7 @@ int main(void) {
         }
         else
             printf("no tag\n");
-
+*/
 // Check if PLC reading thread is still running
         if( threadCheck( &thread ) ) {
             logMsg( LOG_INFO, "PLC reading process exited, try to reconnect to PLC\n" );
