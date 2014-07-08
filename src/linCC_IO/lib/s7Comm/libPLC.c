@@ -113,10 +113,12 @@ int PLCWriteTags( S7Object* plcClient, W_TAG_VAR* tagVar, unsigned long* tagVarC
 //      On this version of linCC only DB can be read and write
         plcItems[i].Area    = 0x84;
         
+        plcItems[i].DBNumber = tagVar[i].db;    
         plcItems[i].Start   = tagVar[i].address;
         plcItems[i].Amount = 1;
         
         unsigned char *data;
+        data = NULL;
         
         if( tagVar[i].type == Bool ) {
             plcItems[i].WordLen = 0x01;
@@ -170,7 +172,7 @@ int PLCWriteTags( S7Object* plcClient, W_TAG_VAR* tagVar, unsigned long* tagVarC
             
         }
         
-        plcItems[i].DBNumber = tagVar[i].db;
+        printf(" TTTAAAAAAAG:::: %d", tagVar[i].id);
     }
 //  Send data buffer
     int retVal = Cli_WriteMultiVars( *plcClient, plcItems, ( int )*tagVarCount );
@@ -182,13 +184,5 @@ int PLCWriteTags( S7Object* plcClient, W_TAG_VAR* tagVar, unsigned long* tagVarC
 
     
     return retVal;
-//  Read data into PLC and read error detection
-    /*if( Cli_AsDBRead( *plcClient, *tagDB, *startByte, *dataLength, data ))
-        return PLC_DB_READ_ERROR;
-    
-    int retVal;    
-    if( ( retVal = Cli_WaitAsCompletion( *plcClient, 1000) ) == 0x02200000 )
-        return retVal;
-             
-    return 0;*/
+
 }

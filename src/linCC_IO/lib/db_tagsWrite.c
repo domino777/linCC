@@ -35,8 +35,10 @@ int getTagWrite( W_TAG_VAR** wTagVar, unsigned long* wTagVarCount ) {
     linCCConnect( &sqlHndl );
     
     *wTagVarCount = linCCRowCount( sqlHndl, "varList", "wFlag=1" );
-    if ( !*wTagVarCount )
+    if ( !*wTagVarCount ) {
+        linCCDisconnect( sqlHndl );
         return 1;
+    }
     
 //  Retrive tag list from databese
     DATA_ROWS* tagsList;

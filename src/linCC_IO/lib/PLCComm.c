@@ -96,8 +96,6 @@ int varTagGetValues ( TAG_VAR* tagList, U_TAG_VAR** tagListUp, PLCData* dataPack
     }
     
     *updateTagCount = tagCountUp;
-    if( !tempVar )
-        tempVar = malloc( 1 );
     *tagListUp = tempVar;
     firstRun = 1;
     

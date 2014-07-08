@@ -32,6 +32,9 @@
 #include "libPLC.h"
 #include "linCC.h"
 
+unsigned char pausePLCReadThread;
+unsigned char PLCThreadStandBy;
+
 extern PLCData* addressPacked;
 
 int threadPLCRead( pthread_t* thread, PLCThread* threadData );

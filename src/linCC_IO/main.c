@@ -79,18 +79,26 @@ int main(void) {
     while( 1 ) {
         sleep( 1 );
         
-      /*  W_TAG_VAR* wTagVar;
+        W_TAG_VAR* wTagVar;
         
-        if( !getTagWrite( &wTagVar, &wTagVarCount ) ) {
-            for( int i = 0; i < wTagVarCount; i++ ) {
-                printf("tag id: %d -- Value %f\n", wTagVar[i].id, wTagVar[i].tagValue );
+        pausePLCReadThread = 1;
+        while( !PLCThreadStandBy );
+        if( PLCThreadStandBy ) {
+            if( !getTagWrite( &wTagVar, &wTagVarCount ) ) {
+                for( int i = 0; i < wTagVarCount; i++ ) {
+                    printf("tag id: %d -- Value %f\n", wTagVar[i].id, wTagVar[i].tagValue );
+                }
+//  if( !PLCWriteTags( &client, wTagVar, &wTagVarCount ) )
+                PLCWriteTags( &client, wTagVar, &wTagVarCount );
+//  clrTagWrite( wTagVar, &wTagVarCount );
+                free( wTagVar );
             }
-            PLCWriteTags( &client, wTagVar, &wTagVarCount );
-            free( wTagVar );
+            else
+                printf("no tag\n");
         }
-        else
-            printf("no tag\n");
-*/
+        
+        pausePLCReadThread = 0;
+        
 // Check if PLC reading thread is still running
         if( threadCheck( &thread ) ) {
             logMsg( LOG_INFO, "PLC reading process exited, try to reconnect to PLC\n" );
