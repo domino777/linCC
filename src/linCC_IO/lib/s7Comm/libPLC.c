@@ -82,15 +82,16 @@ float PLCReadTag( S7Object* plcClient, unsigned int* tagDB, unsigned long* tagBy
      return 0xFFFFFFFF;
 }
 
-int PLCReadTags( S7Object* plcClient, unsigned int* tagDB, unsigned long* startByte, unsigned long* dataLength, unsigned char* data) {
+int PLCReadTags( S7Object* plcClient, unsigned int* tagDB, unsigned long* startByte, unsigned long* dataLength, unsigned char** data) {
 
 //  Read data into PLC and read error detection
-    if( Cli_AsDBRead( *plcClient, *tagDB, *startByte, *dataLength, data ))
+    if( Cli_AsDBRead( *plcClient, *tagDB, *startByte, *dataLength, *data ))
         return PLC_DB_READ_ERROR;
     
     int retVal;    
-    if( ( retVal = Cli_WaitAsCompletion( *plcClient, 1000) ) == 0x02200000 )
-        return retVal;
+    while( retVal = Cli_WaitAsCompletion( *plcClient, 1000) )
+        if ( retVal != 0x02200000 )
+            return retVal;
              
     return 0;
 }
@@ -151,7 +152,7 @@ int PLCWriteTags( S7Object* plcClient, W_TAG_VAR* tagVar, unsigned long* tagVarC
             plcItems[i].WordLen = 0x06;
 
             data = malloc( 4 );
-            long val = ( long )( tagVar[i].tagValue );
+            int val = ( int )( tagVar[i].tagValue );
             data[0] = *((unsigned char*)(&( val ) ) + 3);
             data[1] = *((unsigned char*)(&( val ) ) + 2);
             data[2] = *((unsigned char*)(&( val ) ) + 1);

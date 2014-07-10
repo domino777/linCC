@@ -56,16 +56,17 @@ int varTagGetValues ( TAG_VAR* tagList, U_TAG_VAR** tagListUp, PLCData* dataPack
         
         else if( tagList[i].type  == DWord || tagList[i].type  == DInt ) {
         
-            long tempLong;
+            int tempLong;
             *((unsigned char*)(&tempLong) + 3) = dataPackage[pkgIndex].data[ ( tagList[i].address - dataPackage[pkgIndex].startByte + 0 ) ];
             *((unsigned char*)(&tempLong) + 2) = dataPackage[pkgIndex].data[ ( tagList[i].address - dataPackage[pkgIndex].startByte + 1 ) ];
             *((unsigned char*)(&tempLong) + 1) = dataPackage[pkgIndex].data[ ( tagList[i].address - dataPackage[pkgIndex].startByte + 2 ) ];
             *((unsigned char*)(&tempLong) + 0) = dataPackage[pkgIndex].data[ ( tagList[i].address - dataPackage[pkgIndex].startByte + 3 ) ];
             
             if( tagList[i].type == DWord )
-                retTempFloat = ( float )( unsigned long )tempLong;
+                retTempFloat = ( float )( unsigned int )tempLong;
             else
-                retTempFloat = ( float )tempLong;
+                retTempFloat = ( float )( int )tempLong;
+                
         }
     
         else if( tagList[i].type  == Real ) {
@@ -77,7 +78,6 @@ int varTagGetValues ( TAG_VAR* tagList, U_TAG_VAR** tagListUp, PLCData* dataPack
            *((unsigned char*)(&tempFloat) + 0) = dataPackage[pkgIndex].data[ ( tagList[i].address - dataPackage[pkgIndex].startByte + 3 ) ];
 
            retTempFloat = tempFloat;
-           //printf("Value float: %f\n", retTempFloat );
         }
     
         else if( tagList[i].type  == Bool ) {
